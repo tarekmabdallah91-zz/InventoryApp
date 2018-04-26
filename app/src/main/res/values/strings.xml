@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Inventory App</string>
+
+    <string name="action_insert_dummy_data">Insert dummy data</string>
+    <string name="action_delete_all_data">Delete all data</string>
+    <string name="action_delete_last_row">Delete last row</string>
+    <string name="action_display_ordered_by_name">Display order by name</string>
+    <string name="action_display_ordered_by_price_more_than">Display price >= 50</string>
+    <string name="action_display_ordered_by_quantity_more_than">Display quantity >= 50</string>
+
+    <string name="action_save">Save</string>
+
+    <string name="product_name">Product</string>
+    <string name="product_price">Price</string>
+    <string name="quantity">Quantity</string>
+    <string name="supplier_name">Supplier Name</string>
+    <string name="supplier_phone">Supplier Phone</string>
+
+    <string name="count_msg">We have [ %d ] products\n</string>
+
+    <string name="error_with_saving_product">Error with saving product</string>
+    <string name="product_saved_with_row">Product saved with row id: </string>
+
+
+
+
+</resources>

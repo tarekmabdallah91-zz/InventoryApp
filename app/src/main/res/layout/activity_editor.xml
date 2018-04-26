@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.EditorActivity">
+
+    <EditText
+        android:id="@+id/product_name"
+        style="@style/edit_text_style"
+        android:inputType="text"
+        android:hint="@string/product_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/product_price"
+        style="@style/edit_text_style"
+        android:inputType="numberDecimal"
+        android:hint="@string/product_price"
+        app:layout_constraintTop_toBottomOf="@id/product_name" />
+
+    <EditText
+        android:id="@+id/quantity"
+        style="@style/edit_text_style"
+        android:inputType="number"
+        android:hint="@string/quantity"
+        app:layout_constraintTop_toBottomOf="@id/product_price" />
+
+    <EditText
+        android:id="@+id/supplier_name"
+        style="@style/edit_text_style"
+        android:inputType="text"
+        android:hint="@string/supplier_name"
+        app:layout_constraintTop_toBottomOf="@id/quantity" />
+
+    <EditText
+        android:id="@+id/supplier_phone"
+        style="@style/edit_text_style"
+        android:inputType="phone"
+        android:hint="@string/supplier_phone"
+        app:layout_constraintTop_toBottomOf="@id/supplier_name" />
+
+
+</android.support.constraint.ConstraintLayout>

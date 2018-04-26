@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.tarek.inventoreyapp">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/if_diagram_v2_17_37137"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".views.CatalogActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".views.EditorActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".views.CatalogActivity"/>
+
+        </activity>
+    </application>
+
+</manifest>
