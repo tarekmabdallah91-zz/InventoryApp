@@ -26,7 +26,7 @@ import com.example.tarek.inventoreyapp.R;
 import com.example.tarek.inventoreyapp.database.contract.ProductContract.ProductEntry;
 import com.example.tarek.inventoreyapp.utils.ProductUtility;
 
-// class link between database resolverContent and views activities
+// class link between database contentResolver and views activities
 
 public class ProductDbQuery {
 
