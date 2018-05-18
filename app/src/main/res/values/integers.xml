@@ -14,14 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
 
-    <color name="default_text_color">#3F51B5</color>
-    <color name="error_msg_text_color">@android:color/holo_red_dark</color>
+    <integer name="text_max_length">30</integer>
+    <integer name="text_min_length">6</integer>
 
-    <color name="out_off_stock_color">@android:color/holo_red_light</color>
-    <color name="free_item_color">@android:color/holo_green_light</color>
-    <color name="background_details_linear_layout">@android:color/white</color>
+    <integer name="phone_number_min_length">15</integer>
+    <integer name="price_max_length">6</integer>
+    <integer name="quantity_max_length">3</integer>
+    <integer name="description_max_length">1000</integer>
 </resources>

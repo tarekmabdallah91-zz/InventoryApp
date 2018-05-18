@@ -1,45 +1,231 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?><!--
+Copyright 2018 tarekmabdallah91@gmail.com
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/padding_margin_value"
     tools:context=".views.EditorActivity">
 
-    <EditText
-        android:id="@+id/product_name"
-        style="@style/edit_text_style"
-        android:inputType="text"
-        android:hint="@string/product_name"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/product_price"
-        style="@style/edit_text_style"
-        android:inputType="numberDecimal"
-        android:hint="@string/product_price"
-        app:layout_constraintTop_toBottomOf="@id/product_name" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_margin_value">
 
-    <EditText
-        android:id="@+id/quantity"
-        style="@style/edit_text_style"
-        android:inputType="number"
-        android:hint="@string/quantity"
-        app:layout_constraintTop_toBottomOf="@id/product_price" />
+        <!-- product name label , edit text and error msg -->
+        <LinearLayout style="@style/details_linear_layouts_style">
 
-    <EditText
-        android:id="@+id/supplier_name"
-        style="@style/edit_text_style"
-        android:inputType="text"
-        android:hint="@string/supplier_name"
-        app:layout_constraintTop_toBottomOf="@id/quantity" />
+            <TextView
+                style="@style/labels_text_views_style"
+                android:text="@string/product_name" />
 
-    <EditText
-        android:id="@+id/supplier_phone"
-        style="@style/edit_text_style"
-        android:inputType="phone"
-        android:hint="@string/supplier_phone"
-        app:layout_constraintTop_toBottomOf="@id/supplier_name" />
+            <EditText
+                android:id="@+id/input_name"
+                style="@style/edit_text_style"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/product_name"
+                android:inputType="text"
+                android:maxLength="@integer/text_max_length" />
+
+            <TextView
+                android:id="@+id/error_msg_name"
+                style="@style/error_msg_text_views_style"
+                tools:text="@string/error_text" />
+        </LinearLayout>
+
+        <!-- product code label , edit text and error msg -->
+        <LinearLayout style="@style/details_linear_layouts_style">
+
+            <TextView
+                style="@style/labels_text_views_style"
+                android:text="@string/product_code" />
+
+            <EditText
+                android:id="@+id/input_code"
+                style="@style/edit_text_style"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/product_code"
+                android:inputType="text"
+                android:maxLength="@integer/text_max_length" />
+
+            <TextView
+                android:id="@+id/error_msg_code"
+                style="@style/error_msg_text_views_style"
+                tools:text="@string/error_text" />
+        </LinearLayout>
+
+        <!-- product category label , edit text and error msg -->
+        <LinearLayout style="@style/details_linear_layouts_style">
+
+            <TextView
+                style="@style/labels_text_views_style"
+                android:text="@string/product_category" />
+
+            <EditText
+                android:id="@+id/input_category"
+                style="@style/edit_text_style"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/product_category"
+                android:inputType="text"
+                android:maxLength="@integer/text_max_length" />
+
+            <TextView
+                android:id="@+id/error_msg_category"
+                style="@style/error_msg_text_views_style"
+                tools:text="@string/error_text" />
+        </LinearLayout>
+
+        <!-- product price label , edit text and error msg -->
+        <LinearLayout style="@style/details_linear_layouts_style">
+
+            <TextView
+                style="@style/labels_text_views_style"
+                android:text="@string/product_price" />
+
+            <EditText
+                android:id="@+id/input_price"
+                style="@style/edit_text_style"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/product_price"
+                android:inputType="number"
+                android:maxLength="@integer/quantity_max_length" />
+
+            <TextView
+                android:id="@+id/error_msg_price"
+                style="@style/error_msg_text_views_style"
+                tools:text="@string/error_price" />
+        </LinearLayout>
+
+        <!-- product quantity label , edit text and error msg -->
+        <LinearLayout style="@style/details_linear_layouts_style">
+
+            <TextView
+                style="@style/labels_text_views_style"
+                android:text="@string/product_quantity" />
+
+            <EditText
+                android:id="@+id/input_quantity"
+                style="@style/edit_text_style"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/product_quantity"
+                android:inputType="number"
+                android:maxLength="@integer/quantity_max_length" />
+
+            <TextView
+                android:id="@+id/error_msg_quantity"
+                style="@style/error_msg_text_views_style"
+                tools:text="@string/error_quantity" />
+        </LinearLayout>
+
+        <!-- product supplier name label , edit text and error msg  -->
+        <LinearLayout style="@style/details_linear_layouts_style">
+
+            <TextView
+                style="@style/labels_text_views_style"
+                android:text="@string/supplier_name" />
+
+            <EditText
+                android:id="@+id/input_supplier_name"
+                style="@style/edit_text_style"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/supplier_name"
+                android:inputType="text"
+                android:maxLength="@integer/text_max_length" />
+
+            <TextView
+                android:id="@+id/error_msg_supplier_name"
+                style="@style/error_msg_text_views_style"
+                tools:text="@string/error_text" />
+        </LinearLayout>
+
+        <!-- product supplier phone label , edit text and error msg -->
+        <LinearLayout style="@style/details_linear_layouts_style">
+
+            <TextView
+                style="@style/labels_text_views_style"
+                android:text="@string/supplier_phone" />
+
+            <EditText
+                android:id="@+id/input_supplier_phone"
+                style="@style/edit_text_style"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/supplier_phone"
+                android:inputType="phone"
+                android:maxLength="@integer/phone_number_min_length" />
+
+            <TextView
+                android:id="@+id/error_msg_supplier_phone"
+                style="@style/error_msg_text_views_style"
+                tools:text="@string/error_supp_phone" />
+        </LinearLayout>
+
+        <!-- product image label , images  -->
+        <TextView
+            style="@style/labels_text_views_style"
+            android:paddingLeft="@dimen/padding_margin_value2"
+            android:text="@string/label_image" />
+
+        <LinearLayout
+            style="@style/details_linear_layouts_style"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image1"
+                style="@style/image_views_style"
+                android:contentDescription="@string/change_image" />
+
+            <ImageView
+                android:id="@+id/image2"
+                style="@style/image_views_style"
+                android:contentDescription="@string/change_image" />
+
+            <ImageView
+                android:id="@+id/image3"
+                style="@style/image_views_style"
+                android:contentDescription="@string/change_image" />
+
+        </LinearLayout>
+
+        <!-- product description label , edit text and error msg -->
+        <LinearLayout style="@style/details_linear_layouts_style">
+
+            <TextView
+                style="@style/labels_text_views_style"
+                android:text="@string/product_description" />
+
+            <EditText
+                android:id="@+id/input_description"
+                style="@style/edit_text_style"
+                android:layout_gravity="center_horizontal"
+                android:height="@dimen/description_edit_text_height"
+                android:hint="@string/product_description"
+                android:inputType="text"
+                android:maxLength="@integer/description_max_length"
+                android:singleLine="false" />
+
+            <TextView
+                android:id="@+id/error_msg_description"
+                style="@style/error_msg_text_views_style"
+                tools:text="@string/error_text" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</ScrollView>
+

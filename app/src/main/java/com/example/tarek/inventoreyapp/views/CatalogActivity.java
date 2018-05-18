@@ -1,6 +1,28 @@
+/*
+Copyright 2018 tarekmabdallah91@gmail.com
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package com.example.tarek.inventoreyapp.views;
 
+import android.app.AlertDialog;
+import android.app.LoaderManager;
+import android.content.ContentUris;
+import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,93 +31,106 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CursorAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tarek.inventoreyapp.R;
-import com.example.tarek.inventoreyapp.database.table.ProductContract.ProductEntry;
+import com.example.tarek.inventoreyapp.adpater.ProductCursorAdapter;
+import com.example.tarek.inventoreyapp.database.contract.ProductContract.ProductEntry;
 import com.example.tarek.inventoreyapp.presenter.ProductDbQuery;
+import com.example.tarek.inventoreyapp.utils.ProductUtility;
+import com.example.tarek.inventoreyapp.utils.ScreenSizeUtility;
 
+import butterknife.BindInt;
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class CatalogActivity extends AppCompatActivity {
 
-    @BindView(R.id.label_count)
-    TextView labelCount;
+public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+
+    // --Commented out by Inspection (18/05/2018 01:37 ص):private static final String TAG = CatalogActivity.class.getSimpleName();
+    private static final String LAST_ID_KEY = "last id";
+    @BindView(R.id.warn_image)
+    ImageView warnImage;
+    @BindView(R.id.btn_show_data)
+    Button showData;
+    @BindView(R.id.input_number)
+    EditText inputNumber;
+    @BindView(R.id.input_name)
+    EditText inputText;
+    @BindView(R.id.count_rows_text_view)
+    TextView countRowsTextView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.empty_text_view)
+    TextView emptyTextView;
+    @BindView(R.id.list)
+    ListView listView;
+    @BindView(R.id.spinner_ordered_by)
+    Spinner spinnerOrderBy;
+    @BindView(R.id.spinner_order_search)
+    Spinner spinnerOrderOrSearch;
+    @BindString(R.string.invalid_input_user_catalog_activity)
+    String invalidInput;
+    @BindString(R.string.error_text)
+    String invalidName;
+    @BindString(R.string.empty_text_msg)
+    String emptyTextMsg;
+    @BindString(R.string.catalog_label)
+    String catalogLabel;
+    @BindString(R.string.put_value_text_msg)
+    String putValueMsg;
+    @BindString(R.string.no_data_for_input_value_msg)
+    String noDataForInputValue;
+    @BindString(R.string.spinner_label_order_by)
+    String spinnerLabelOrderBy;
+    @BindString(R.string.spinner_label_order_by_default)
+    String labelOrderByDefault;
+    @BindString(R.string.spinner_label_id)
+    String labelId;
+    @BindString(R.string.action_delete_all_items)
+    String deleteAllItems;
+    @BindString(R.string.all_items_deleted)
+    String allItemsDeletedMsg;
+    @BindString(R.string.action_insert_dummy_item)
+    String insertDummyItem;
+    @BindString(R.string.keep_editing)
+    String keepMsg;
+    @BindString(R.string.delete_all_items_dialog_msg)
+    String deleteAllItemsMsg;
+    @BindInt(R.integer.price_max_length)
+    int priceMaxLength;
+    @BindInt(R.integer.text_min_length)
+    int textMinLength;
+    @BindInt(R.integer.text_max_length)
+    int textMaxLength;
+    private String mode;
 
-    private static final String TAG = CatalogActivity.class.getSimpleName();
-    private static final String DELETED_MSG = " rows are been Deleted ";
-    private static final String NOT_DELETED_MSG = " Db is empty and there is no row to delete ";
-    private static final String SEPARATOR = " - ";
-    private static final String NEW_LINE = "\n";
-    private static final int NO_ROWS = 0 ;
-    private static final int QUANTITY_VALUE = 50 ;
-    private static final int PRICE_VALUE = 50 ;
+    private int lastId; // max size of db - to get last id in the table
 
-
+    private ScreenSizeUtility screenSizeUtility;
     private ProductDbQuery productDbQuery;
+    private CursorAdapter cursorAdapter;
+    private boolean defaultLoaderStateChanged = false;
+    private String selection;
+    private String moreOrLessSign;
+    private String sortOrder;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_catalog);
-        ButterKnife.bind(this);
-        setUI();
-
-        productDbQuery = new ProductDbQuery(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        displayData(productDbQuery.queryData());
-    }
-
-    /**
-     * to get query and get all data from it's cursor then display them
-     */
-    private void displayData(Cursor cursor) {
-
-        int indexProductId = cursor.getColumnIndex(ProductEntry._ID);
-        int indexProductName = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
-        int indexProductPrice = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
-        int indexQuantity = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
-        int indexSupplierName = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME);
-        int indexSupplierPhone = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_PHONE);
-
-        try {
-            labelCount.setText(String.format(getString(R.string.count_msg), cursor.getCount()));
-            labelCount.append(ProductEntry._ID + SEPARATOR +
-                    ProductEntry.COLUMN_PRODUCT_NAME + SEPARATOR +
-                    ProductEntry.COLUMN_PRODUCT_PRICE + SEPARATOR +
-                    ProductEntry.COLUMN_PRODUCT_QUANTITY + SEPARATOR +
-                    ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + SEPARATOR +
-                    ProductEntry.COLUMN_PRODUCT_SUPPLIER_PHONE + NEW_LINE);
-
-            while (cursor.moveToNext()) {
-                int index = cursor.getInt(indexProductId);
-                //long newRowId = cursor.getPosition();
-                String productName = cursor.getString(indexProductName).trim();
-                float productPrice = Float.parseFloat((cursor.getString(indexProductPrice)));
-                int quantity = cursor.getInt(indexQuantity);
-                String supplierName = cursor.getString(indexSupplierName).trim();
-                String supplierPhone = cursor.getString(indexSupplierPhone).trim();
-
-                labelCount.append((NEW_LINE + index + SEPARATOR +
-                        productName + SEPARATOR +
-                        productPrice + SEPARATOR +
-                        quantity + SEPARATOR +
-                        supplierName + SEPARATOR +
-                        supplierPhone));
-            }
-        } finally {
-            cursor.close();
-        }
+    public static String getLastIdKey() {
+        return LAST_ID_KEY;
     }
 
     @Override
@@ -106,50 +141,363 @@ public class CatalogActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_catalog);
+        ButterKnife.bind(this);
+
+        productDbQuery = new ProductDbQuery(this);
+        screenSizeUtility = new ScreenSizeUtility(this);
+        setUI();
+
+        getLoaderManager().initLoader(ProductUtility.ZERO, null, this);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Cursor cursor = productDbQuery.queryData();
         switch (id) {
             case R.id.action_insert_dummy_data:
-                productDbQuery.insertDummyData();
-                break;
-            case R.id.action_display_ordered_by_name:
-                cursor = productDbQuery.queryDataOrderedBy(ProductEntry.COLUMN_PRODUCT_NAME);
-                break;
-            case R.id.action_display_select_price_more_than:
-                cursor = productDbQuery.queryDataFromWhereOrderByName(ProductEntry.COLUMN_PRODUCT_PRICE, PRICE_VALUE);
-                break;
-            case R.id.action_display_select_quantity_more_than:
-                cursor = productDbQuery.queryDataFromWhereOrderByName(ProductEntry.COLUMN_PRODUCT_QUANTITY, QUANTITY_VALUE);
+                setMode(insertDummyItem);
                 break;
             case R.id.action_delete_all_data:
-                int deletedRows = productDbQuery.deleteAll();
-                Toast.makeText(this, deletedRows + DELETED_MSG, Toast.LENGTH_LONG).show();
-                break;
-            case R.id.action_delete_last_row:
-                if (productDbQuery.getCountRows() > NO_ROWS) {
-                    productDbQuery.deleteFromWhere(productDbQuery.getCountRows());
-                } else {
-                    Toast.makeText(this, NOT_DELETED_MSG, Toast.LENGTH_LONG).show();
-                }
+                setMode(deleteAllItems);
                 break;
         }
-
-        displayData(cursor);
+        restartLoaderOnQueryBundleChange(null);
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void setUI() {
+    /**
+     * to set all views
+     */
+    private void setUI() {
+        setListView();
+        setSpinnerOrderBy();
+        setSpinnerOrderOrSearch();
+        setFab();
+        setInputFieldVisibility(View.GONE); // to hide it tell user want to enter some values to show certain queries
+        setViewsMode(ProductUtility.DEFAULT_MODE); // as default mode
+    }
 
+    /**
+     * to show discard msg if the user clicked back,up or save  buttons
+     */
+    private void showDiscardMsg(String msg, String discard, String doSomeThing) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg);
+        builder.setPositiveButton(discard, getDialogInterfaceOnClickListener(discard));
+        builder.setNegativeButton(doSomeThing, getDialogInterfaceOnClickListener(doSomeThing));
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private DialogInterface.OnClickListener getDialogInterfaceOnClickListener(String usage) {
+        if (usage.equals(keepMsg)) {
+            return new DialogInterface.OnClickListener() {
+                // user want to edit
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                }
+            };
+        } else if (usage.equals(deleteAllItems)) { // delete all items (used in CatalogActivity)
+            return new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    int deletedRows = productDbQuery.deleteAll();
+                    Toast.makeText(getBaseContext(), deletedRows + allItemsDeletedMsg, Toast.LENGTH_LONG).show();
+                }
+            };
+        } else { // discard case - user want to exit
+            return new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            };
+        }
+    }
+
+    /**
+     * to set the spinnerOrderBy and it's cursorAdapter
+     */
+    private void setSpinnerOrderBy() {
+        final ArrayAdapter<CharSequence> adapterSpinnerOrderBy =
+                ArrayAdapter.createFromResource(this, R.array.default_order_by, android.R.layout.simple_spinner_item);
+
+        adapterSpinnerOrderBy.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerOrderBy.setAdapter(adapterSpinnerOrderBy);
+
+        spinnerOrderBy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String itemName = (String) adapterSpinnerOrderBy.getItem(position);
+                String[] parts;
+                if (mode.equals(spinnerLabelOrderBy) || mode.equals(moreOrLessSign)) {// mode order by
+                    if (itemName.contains(ProductUtility.MINUS)) { // like : price/quantity - more / less than
+                        parts = itemName.split(ProductUtility.SPLITTER_REGEX_MINUS);
+                        selection = parts[ProductUtility.ZERO];
+                        if (parts[ProductUtility.ONE].contains(ProductUtility.MORE_THAN)) {
+                            sortOrder = selection + ProductUtility.ASC;
+                            moreOrLessSign = ProductUtility.MORE_THAN_SIGN;
+                        } else if (parts[ProductUtility.ONE].contains(ProductUtility.LESS_THAN)) {
+                            sortOrder = selection + ProductUtility.DESC;
+                            moreOrLessSign = ProductUtility.LESS_THAN_SIGN;
+                        }
+                        setViewsMode(moreOrLessSign);
+                        selection = selection + moreOrLessSign;// to add sign to selection whatever was it's case
+                        setEmptyTextView(putValueMsg);
+                        defaultLoaderStateChanged = true;
+                    } else { // like : id , name , quantity ,  price/quantity ASC/DESC
+                        if (itemName.equals(labelOrderByDefault)) {
+                            // just to prevent restarting
+                            // the loader after changing the mode 1st time while the activity still just started
+                            defaultLoaderStateChanged = false;
+                            sortOrder = null;
+                        } else {
+                            defaultLoaderStateChanged = true;
+                            sortOrder = itemName;
+                            setViewsMode(spinnerLabelOrderBy);
+                        }
+                        if (defaultLoaderStateChanged) {
+
+                            //  must be here to restart the loader if user clicked on Id Item
+                            //  and load the default cursor then get last ID while defaultLoaderStateChanged = false;
+                            //  and here is the right place for this lines
+                            if (itemName.equals(labelId)) {
+                                defaultLoaderStateChanged = false;
+                                sortOrder = null;
+                            }
+                            restartLoaderOnQueryBundleChange(ProductUtility.getBundle(null, null, sortOrder));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    /**
+     * to set the setSpinnerOrderOrSearch and it's cursorAdapter
+     */
+    private void setSpinnerOrderOrSearch() {
+        final ArrayAdapter<CharSequence> adapter_spinner_order_search =
+                ArrayAdapter.createFromResource(this, R.array.order_search, android.R.layout.simple_spinner_item);
+
+        adapter_spinner_order_search.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerOrderOrSearch.setAdapter(adapter_spinner_order_search);
+
+        spinnerOrderOrSearch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String itemName = (String) adapter_spinner_order_search.getItem(position);
+                setViewsMode(itemName);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    /**
+     * to set cursor = null and msg for the text view
+     *
+     * @param msg to be set to the emptyTextView
+     */
+    private void setEmptyTextView(String msg) {
+        cursorAdapter.swapCursor(null);
+        warnImage.setImageResource(R.drawable.icons8_error_96_2);
+        emptyTextView.setText(msg);
+    }
+
+    /**
+     * to hide/show views according to the case of mode
+     *
+     * @param mode as switch between cases
+     */
+    private void setViewsMode(String mode) {
+        setMode(mode);
+        if (mode.equals(ProductUtility.DEFAULT_MODE) || mode.equals(spinnerLabelOrderBy)) {
+            spinnerOrderBy.setVisibility(View.VISIBLE);
+            inputNumber.setVisibility(View.GONE);
+            inputText.setVisibility(View.GONE);
+            showData.setVisibility(View.GONE);
+        } else if (mode.equals(moreOrLessSign)) {
+            spinnerOrderBy.setVisibility(View.VISIBLE);
+            inputNumber.setVisibility(View.VISIBLE);
+            inputText.setVisibility(View.GONE);
+            showData.setVisibility(View.VISIBLE);
+            setEmptyTextView(noDataForInputValue);
+        } else { // search for name/category/code
+            spinnerOrderBy.setVisibility(View.GONE);
+            inputNumber.setVisibility(View.GONE);
+            inputText.setVisibility(View.VISIBLE);
+            showData.setVisibility(View.VISIBLE);
+            setEmptyTextView(noDataForInputValue);
+        }
+    }
+
+    private void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    @OnClick(R.id.btn_show_data)
+    void onClickShowData() {
+        String[] result;
+        String[] selectionArgs;
+        String errorMsg;
+        if (mode.equals(moreOrLessSign)) {// get input number from user
+            result = ProductUtility.checkEnteredNumbers(ProductUtility.getTextEditText(inputNumber));
+            selectionArgs = new String[]{result[ProductUtility.ONE]};
+            errorMsg = String.format(invalidInput, priceMaxLength);
+        } else { // get input text from user
+            result = ProductUtility.checkEnteredTextToSearch(ProductUtility.getTextEditText(inputText));
+            /* EDIT selection here because SQL SELECTION must be expression contains something like "=?"
+             * and in this case there is no any expression make the statement is correctly read  , so to avoid this error *
+             * Caused by: android.database.sqlite.SQLiteException: near "LIKE": syntax error (code 1): , while compiling: SELECT * FROM Products WHERE Name LIKE
+             * add the input value to the selection directly to be as : WHERE name LIKE '%(inputValue)%'
+             * and must make selection args = null to avoid any code interfaces */
+            String columnName = mode.split(ProductUtility.SPLITTER_REGEX_COLUMN_NAME,
+                    ProductUtility.TEN)[ProductUtility.ONE];
+            selection = columnName + ProductUtility.LIKE + result[ProductUtility.ONE];
+            selectionArgs = null;
+            sortOrder = columnName; // to be ordered by the column name
+            errorMsg = String.format(invalidName, ProductEntry.COLUMN_PRODUCT_NAME, textMinLength, textMaxLength);
+        }
+        String flag = result[ProductUtility.ZERO];
+        if (flag.equals(ProductUtility.TRUE)) {
+            ProductUtility.showToastMsg(getBaseContext(), errorMsg);
+        } else {
+            Bundle args = ProductUtility.getBundle(
+                    selection,
+                    selectionArgs,
+                    sortOrder);
+            restartLoaderOnQueryBundleChange(args);
+        }
+    }
+
+    /**
+     * to set fab and toolbar
+     */
+    private void setFab() {
         setSupportActionBar(toolbar);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent openEditorActivity = new Intent(CatalogActivity.this, EditorActivity.class);
+                openEditorActivity.putExtra(LAST_ID_KEY, lastId);
                 startActivity(openEditorActivity);
             }
         });
+    }
+
+    /**
+     * to set list view and it's cursorAdapter
+     */
+    private void setListView() {
+        cursorAdapter = new ProductCursorAdapter(this, null);
+        int paddingSidesValue = ProductUtility.ZERO;
+        int paddingBottomValue = screenSizeUtility.getHeight() / ProductUtility.FOUR;
+
+        listView.setEmptyView(emptyTextView);
+        listView.setPadding(paddingSidesValue, paddingSidesValue, paddingSidesValue, paddingBottomValue);
+        listView.setAdapter(cursorAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent editProduct = new Intent(CatalogActivity.this, EditorActivity.class);
+                editProduct.setData(ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id));
+                startActivity(editProduct);
+            }
+        });
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        CursorLoader cursorLoader;
+        String[] projection = productDbQuery.projection();
+        String selection = null;
+        String[] selectionArgs = null;
+        String sortOrder = null;
+        if (args == null) {
+            if (mode.equals(insertDummyItem)) {
+                productDbQuery.insertData(null); // to insert dummy values
+            } else if (mode.equals(deleteAllItems)) {
+                showDiscardMsg(deleteAllItemsMsg, keepMsg, deleteAllItems);
+            }
+        } else {
+            selection = args.getString(ProductUtility.BUNDLE_KEY_SELECTION);
+            selectionArgs = args.getStringArray(ProductUtility.BUNDLE_KEY_SELECTION_ARGS);
+            sortOrder = args.getString(ProductUtility.BUNDLE_KEY_SORT_ORDER);
+
+        }
+        cursorLoader = new CursorLoader(this, ProductEntry.CONTENT_URI,
+                projection,
+                selection,
+                selectionArgs,
+                sortOrder);
+        return cursorLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data == null) {
+            warnImage.setImageResource(R.drawable.icons8_empty_box_48);
+            emptyTextView.setText(emptyTextMsg);
+            return;
+        }
+
+        cursorAdapter.swapCursor(data);
+        if (!defaultLoaderStateChanged) {// to get last id just on the default case when loads all data only
+            if (data.moveToLast()) {
+                lastId = data.getInt(data.getColumnIndex(ProductEntry._ID));
+            }
+        }
+        countRowsTextView.setText(String.format(catalogLabel, data.getCount()));
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        cursorAdapter.swapCursor(null);
+        //loader.abandon();
+    }
+
+    /**
+     * to set Loader Manager with variable Bundle args EASILY in spinnerOrderBy's cases
+     *
+     * @param args it's value is used to change Loader<Cursor> which return from onCreateLoader
+     *             to change the displayed values on the screen depending on the query parameters
+     */
+    private void restartLoaderOnQueryBundleChange(Bundle args) {
+        getLoaderManager().restartLoader(ProductUtility.ZERO, args, this);
+    }
+
+    /**
+     * to set EditText as false as default state till user choose  price/quantity  more/less than value
+     * <p>
+     * when the focus changed and not be on the edit text
+     * it take the input value and check it then return (it's Integer value as String
+     * to be passed to selectionArgs String[] as 1st element) if it wasn't null
+     * or showing Toast msg to warn him to enter valid number
+     */
+    private void setInputFieldVisibility(int visibility) {
+        inputNumber.setVisibility(visibility); // as default state till user choose  price/quantity  more/less than value
+        inputText.setVisibility(visibility);
+        showData.setVisibility(visibility);
     }
 }
