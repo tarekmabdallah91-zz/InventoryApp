@@ -29,63 +29,67 @@ import java.util.Random;
 
 public class ProductUtility {
 
-    public static final String DEFAULT_MODE = "default mode";
-    public static final String BUNDLE_KEY_SELECTION = "selection";
-    public static final String BUNDLE_KEY_SELECTION_ARGS = "selectionArgs";
-    public static final String BUNDLE_KEY_SORT_ORDER = "sortOrder";
-    public static final String SIGN_ID = " =?";
-    public static final String DOLLAR_SIGN = " $";
-    public static final String MORE_THAN_SIGN = " >=?";
-    public static final String LESS_THAN_SIGN = " <=?";
-    public static final String MORE_THAN = "more than";
-    public static final String LESS_THAN = "less than";
-    public static final String DESC = " DESC";
-    public static final String ASC = " ASC";
-    public static final String TEXT = "TEXT";
-    public static final String NUMERIC = "NUMERIC";
-    public static final String LONG_TEXT = "LONG_TEXT";
-    public static final String PHONE = "PHONE";
-    public static final String TRUE = "TRUE";
-    public static final String FALSE = "FALSE";
-    public static final String LIKE = " LIKE ";
-    public static final String SPLITTER_REGEX_COLUMN_NAME = "(for )";
-    public static final String SPLITTER_REGEX_MINUS = "(-)";
-    public static final String MINUS = "-";
-    public static final String INTENT_TYPE_IMAGE = "image/*";
-    public static final float DUMMY_PRODUCT_PRICE = 0.99f;
-    public static final int LIMIT_RANDOM_VALUE = 1000;
-    public static final int NOT_NULLABLE_COLUMNS_COUNT = 7;
-    public static final int INVALID = -1;
-    public static final int VALID = 1;
+    private static final String DUMMY_SUPPLIER_PHONE = "0100111100";
+    private static final String WHITE_SPACE_REGEX = ".*\\s.*";
+    private static final int LIMIT_DESCRIPTION_LENGTH = 1000;
+    public final String LAST_ID_KEY = "last id";
+    public final String DEFAULT_MODE = "default mode";
+    public final String BUNDLE_KEY_SELECTION = "selection";
+    public final String BUNDLE_KEY_SELECTION_ARGS = "selectionArgs";
+    public final String BUNDLE_KEY_SORT_ORDER = "sortOrder";
+    public final String SIGN_ID = " =?";
+    public final String DOLLAR_SIGN = " $";
+    public final String MORE_THAN_SIGN = " >=?";
+    public final String LESS_THAN_SIGN = " <=?";
+    public final String MORE_THAN = "more than";
+    public final String LESS_THAN = "less than";
+    public final String DESC = " DESC";
+    public final String ASC = " ASC";
+    public final String TEXT = "TEXT";
+    public final String NUMERIC = "NUMERIC";
+    public final String LONG_TEXT = "LONG_TEXT";
+    public final String PHONE = "PHONE";
+    public final String TRUE = "TRUE";
+    public final String FALSE = "FALSE";
+    public final String LIKE = " LIKE ";
+    public final String SPLITTER_REGEX_COLUMN_NAME = "(for )";
+    public final String SPLITTER_REGEX_MINUS = "(-)";
+    public final String MINUS = "-";
+    public final String INTENT_TYPE_IMAGE = "image/*";
+    public final float DUMMY_PRODUCT_PRICE = 0.99f;
+    public final int LIMIT_RANDOM_VALUE = 100;
     public static final int ZERO = 0;
     public static final int ONE = 1;
     public static final int TWO = 2;
-    public static final int THREE = 3;
-    public static final int FOUR = 4;
-    public static final int FIVE = 5;
-    public static final int SIX = 6;
-    public static final int SEVEN = 7;
-    public static final int TEN = 10;
+    public final int NOT_NULLABLE_COLUMNS_COUNT = 7;
+    public final int INVALID = -1;
+    public final int VALID = 1;
+    public final int THREE = 3;
+    public final int FOUR = 4;
+    public final int FIVE = 5;
     private static final String DUMMY_PRODUCT_NAME = "product";
     private static final String DUMMY_PRODUCT_CODE = "code";
     private static final String DUMMY_SUPPLIER_NAME = "name";
-    private static final String DUMMY_SUPPLIER_PHONE = "01234";
+    public final int SIX = 6;
     private static final String DUMMY_PRODUCT_DESCRIPTION = "no description found";
     private static final String DUMMY_PRODUCT_CATEGORY = "category";
     private static final String EMPTY_STRING = "";
-    private static final String PHONE_NUMBER_REGEX = "^[0-9]*$";
     private static final String TEXT_REGEX = "^[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$";
+    public final int SEVEN = 7;
     private static final String SEARCH_TEXT_1ST_SINGLE_QUOTE = "'%";
     private static final String SEARCH_TEXT_2ND_SINGLE_QUOTE = "%'";
-    private static final int LIMIT_DESCRIPTION_LONG = 1000;
+    public final int TEN = 10;
     private static final int COLUMNS_COUNT = 8;
-    private static final Random random = new Random();
+    private final Random random = new Random();
 
+    public ProductUtility() {
+
+    }
 
     /**
      * to generate dummy values and set them to Edit Text fields
      */
-    public static String[] getDummyStringValues() {
+    public String[] getDummyStringValues() {
         // to change dummy data values according to  the random value
         String[] dummyValues = new String[COLUMNS_COUNT];
         dummyValues[ZERO] = DUMMY_PRODUCT_NAME + getRandomValue();
@@ -103,18 +107,18 @@ public class ProductUtility {
      * to generate dummy values for testing purpose
      * used when want to insert dummy content values to db directly
      */
-    public static ContentValues getDummyContentValues() {
-        String[] dummyValues = ProductUtility.getDummyStringValues();
+    public ContentValues getDummyContentValues() {
+        String[] dummyValues = getDummyStringValues();
 
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME, dummyValues[ProductUtility.ZERO]);
-        values.put(ProductEntry.COLUMN_PRODUCT_CODE, dummyValues[ProductUtility.ONE]);
-        values.put(ProductEntry.COLUMN_PRODUCT_CATEGORY, dummyValues[ProductUtility.TWO]);
-        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, dummyValues[ProductUtility.THREE]);
-        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, dummyValues[ProductUtility.FOUR]);
-        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, dummyValues[ProductUtility.FIVE]);
-        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_PHONE, dummyValues[ProductUtility.SIX]);
-        values.put(ProductEntry.COLUMN_PRODUCT_DESCRIPTION, dummyValues[ProductUtility.SEVEN]);
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, dummyValues[ZERO]);
+        values.put(ProductEntry.COLUMN_PRODUCT_CODE, dummyValues[ONE]);
+        values.put(ProductEntry.COLUMN_PRODUCT_CATEGORY, dummyValues[TWO]);
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, dummyValues[THREE]);
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, dummyValues[FOUR]);
+        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, dummyValues[FIVE]);
+        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_PHONE, dummyValues[SIX]);
+        values.put(ProductEntry.COLUMN_PRODUCT_DESCRIPTION, dummyValues[SEVEN]);
         return values;
     }
 
@@ -125,12 +129,22 @@ public class ProductUtility {
      * @param context for toast context
      * @param msg     to be shown
      */
-    public static void showToastMsg(Context context, String msg) {
+    public void showToastMsg(Context context, String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
-    public static int getRandomValue() {
+    public int getRandomValue() {
         return random.nextInt(LIMIT_RANDOM_VALUE);
+    }
+
+    /**
+     * to check if text has white space or not
+     *
+     * @param text to be checked
+     * @return true if there is whte space or false if not
+     */
+    private boolean textHasWhiteSpace(String text) {
+        return text.matches(WHITE_SPACE_REGEX);
     }
 
     /**
@@ -144,22 +158,22 @@ public class ProductUtility {
      * regex from link
      * https://stackoverflow.com/questions/2821419/regular-expression-starting-and-ending-with-a-letter-accepting-only-letters
      */
-    public static String[] checkEnteredTextToSearch(String name) {
+    public String[] checkEnteredTextToSearch(String name) {
         String invalid = TRUE; // invalid value
         String nameButNotMatched = EMPTY_STRING;
         String checkedValue = EMPTY_STRING;
-        if (!TextUtils.isEmpty(name)) {
+        if (!TextUtils.isEmpty(name) && !textHasWhiteSpace(name)) {
             if (name.matches(TEXT_REGEX)) {
                 invalid = FALSE;
-                checkedValue = ProductUtility.SEARCH_TEXT_1ST_SINGLE_QUOTE + name +
-                        ProductUtility.SEARCH_TEXT_2ND_SINGLE_QUOTE;
+                checkedValue = SEARCH_TEXT_1ST_SINGLE_QUOTE + name +
+                        SEARCH_TEXT_2ND_SINGLE_QUOTE;
             } else nameButNotMatched = name;
         }
         return new String[]{invalid, checkedValue, nameButNotMatched};
     }
 
     /**
-     * to check user input value if empty or doesn't match the regex
+     * to check user input value if empty or doesn't match the regex or has white space
      *
      * @param name input value
      * @return string [] 3 elements
@@ -169,19 +183,19 @@ public class ProductUtility {
      * regex from link
      * https://stackoverflow.com/questions/2821419/regular-expression-starting-and-ending-with-a-letter-accepting-only-letters
      */
-    private static String[] checkEnteredText(String name) {
-        String invalid = TRUE; // invalid value
+    private String[] checkEnteredText(String name) {
+        String flag = TRUE; // invalid value
         String nameButNotMatched = EMPTY_STRING;
         String checkedValue = EMPTY_STRING;
-        if (!TextUtils.isEmpty(name)) {
-            if (name.length() >= SIX) {
+        if (!TextUtils.isEmpty(name) && !textHasWhiteSpace(name)) {
+            if (name.length() >= THREE) {
                 if (name.matches(TEXT_REGEX)) {
-                    invalid = FALSE;
+                    flag = FALSE;
                     checkedValue = name;
                 } else nameButNotMatched = name;
             }
         }
-        return new String[]{invalid, checkedValue, nameButNotMatched};
+        return new String[]{flag, checkedValue, nameButNotMatched};
     }
 
     /**
@@ -193,12 +207,12 @@ public class ProductUtility {
      * 2nd element is the valid value or null if it was invalid
      * 3rd element is the input value even it was invalid
      */
-    private static String[] checkEnteredLongText(String longText) {
+    private String[] checkEnteredLongText(String longText) {
         String invalid = TRUE; // invalid value
         String nameButNotMatched = EMPTY_STRING;
         String checkedValue = EMPTY_STRING;
         if (!TextUtils.isEmpty(longText)) {
-            if (longText.length() < LIMIT_DESCRIPTION_LONG) {
+            if (longText.length() < LIMIT_DESCRIPTION_LENGTH) {
                 invalid = FALSE;
                 checkedValue = longText;
             } else nameButNotMatched = longText;
@@ -215,7 +229,7 @@ public class ProductUtility {
      * 2nd element is the valid value or null if it was invalid
      * 3rd element is the input value even it was invalid
      */
-    public static String[] checkEnteredNumbers(String number) {
+    public String[] checkEnteredNumbers(String number) {
         String invalid = TRUE; // invalid value
         String checkedValue = EMPTY_STRING;
         if (!TextUtils.isEmpty(number)) {
@@ -237,12 +251,12 @@ public class ProductUtility {
      * 2nd element is the valid value or null if it was invalid
      * 3rd element is the input value even it was invalid
      */
-    private static String[] checkEnteredPhoneNumber(String phone) {
+    private String[] checkEnteredPhoneNumber(String phone) {
         String invalid = TRUE; // not valid value as default case
         String phoneButNotMatched = EMPTY_STRING;
         String checkedValue = EMPTY_STRING;
         if (!TextUtils.isEmpty(phone)) {
-            if (phone.matches(PHONE_NUMBER_REGEX)) {
+            if (phone.length() >= TEN) {
                 invalid = FALSE;
                 checkedValue = phone;
             } else phoneButNotMatched = phone;
@@ -260,21 +274,21 @@ public class ProductUtility {
      * 2nd element is the valid value or null if it was invalid
      * 3rd element is the input value even it was invalid
      */
-    public static String[] checkIfFieldIsNull(EditText editText, String type) {
+    public String[] checkIfFieldIsNull(EditText editText, String type) {
         String[] flagAndValues;
         switch (type) {
             case TEXT: // name , code .. etc
-                flagAndValues = ProductUtility.checkEnteredText(ProductUtility.getTextEditText(editText));
+                flagAndValues = checkEnteredText(getTextEditText(editText));
                 break;
             case NUMERIC: // price , quantity
-                flagAndValues = ProductUtility.checkEnteredNumbers(ProductUtility.getTextEditText(editText));
+                flagAndValues = checkEnteredNumbers(getTextEditText(editText));
                 break;
             case PHONE: // phone number
-                flagAndValues = ProductUtility.checkEnteredPhoneNumber(ProductUtility.getTextEditText(editText));
+                flagAndValues = checkEnteredPhoneNumber(getTextEditText(editText));
                 break;
             case LONG_TEXT:// long text (description)
             default:
-                flagAndValues = ProductUtility.checkEnteredLongText(ProductUtility.getTextEditText(editText));
+                flagAndValues = checkEnteredLongText(getTextEditText(editText));
         }
         return flagAndValues;
     }
@@ -285,7 +299,7 @@ public class ProductUtility {
      * @param editText to get it's text
      * @return it's String value
      */
-    public static String getTextEditText(EditText editText) {
+    public String getTextEditText(EditText editText) {
         return editText.getText().toString().trim();
     }
 
@@ -297,7 +311,7 @@ public class ProductUtility {
      * @param sortOrder     order by
      * @return bundle ready for the required  query
      */
-    public static Bundle getBundle(String selection, String[] selectionArgs, String sortOrder) {
+    public Bundle getBundle(String selection, String[] selectionArgs, String sortOrder) {
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_KEY_SELECTION, selection);
         bundle.putStringArray(BUNDLE_KEY_SELECTION_ARGS, selectionArgs);
@@ -305,9 +319,9 @@ public class ProductUtility {
         return bundle;
     }
 
-    public static boolean noNullValues(ContentValues values) {
+    public boolean noNullValues(ContentValues values) {
         // if values didn't have 6 values for all columns , check which one didn't found
-        return (values.containsKey(ProductEntry.COLUMN_PRODUCT_CATEGORY)) &&
+        return (values.containsKey(ProductEntry.COLUMN_PRODUCT_NAME)) &&
                 (values.containsKey(ProductEntry.COLUMN_PRODUCT_CODE)) &&
                 (values.containsKey(ProductEntry.COLUMN_PRODUCT_CATEGORY)) &&
                 (values.containsKey(ProductEntry.COLUMN_PRODUCT_PRICE)) &&

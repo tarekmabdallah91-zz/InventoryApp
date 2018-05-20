@@ -20,11 +20,11 @@ limitations under the License.
     <dimen name="padding_margin_value">4dp</dimen>
     <dimen name="padding_margin_value2">10dp</dimen>
 
-    <dimen name="name_text_size">40sp</dimen>
-    <dimen name="code_text_size">30sp</dimen>
-    <dimen name="id_text_size">16sp</dimen>
-    <dimen name="price_text_size">30sp</dimen>
-    <dimen name="quantity_text_size">20sp</dimen>
+    <dimen name="name_text_size">20sp</dimen>
+    <dimen name="code_text_size">18sp</dimen>
+    <dimen name="id_text_size">10sp</dimen>
+    <dimen name="price_text_size">14sp</dimen>
+    <dimen name="quantity_text_size">12sp</dimen>
 
     <dimen name="default_texts_size">16sp</dimen>
     <dimen name="summary_text_size">14sp</dimen>
@@ -34,6 +34,6 @@ limitations under the License.
 
     <dimen name="list_divider_height">8dp</dimen>
 
-    <dimen name="edit_text_width">300dp</dimen>
+    <dimen name="edit_text_width">250dp</dimen>
     <dimen name="description_edit_text_height">120dp</dimen>
 </resources>

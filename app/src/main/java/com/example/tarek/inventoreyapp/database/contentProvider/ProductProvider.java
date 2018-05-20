@@ -24,6 +24,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.tarek.inventoreyapp.R;
 import com.example.tarek.inventoreyapp.database.contract.ProductContract;
@@ -34,8 +35,8 @@ import com.example.tarek.inventoreyapp.utils.ProductUtility;
 
 public class ProductProvider extends ContentProvider {
 
-    private static final String LOG_TAG = ProductProvider.class.getSimpleName();
-
+    private static final String LOG_TAG = ProductProvider.class.getSimpleName() + " : ";
+    private ProductUtility productUtility;
 
     private static final int PRODUCT = 100; // code for table path uri
     private static final int PRODUCT_ID = 101; // code for table's rows uri
@@ -53,6 +54,7 @@ public class ProductProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         dbHelper = new ProductDbHelper(getContext());
+        productUtility = new ProductUtility();
         return true;
     }
 
@@ -121,8 +123,10 @@ public class ProductProvider extends ContentProvider {
     private Uri insertData(Uri uri, ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase(); // get the writable db to insert the data
         int newRowId = (int) db.insert(ProductEntry.TABLE_NAME, null, values);
-        if (newRowId == ProductUtility.INVALID) { // if not inserted throw this error
-            throw new IllegalArgumentException(LOG_TAG + getContext().getString(R.string.error_inserting_data) + uri);
+        if (newRowId == productUtility.INVALID) { // if not inserted throw this error
+            Log.e(LOG_TAG, getContext().getString(R.string.error_inserting_data) + uri);
+            return null;
+            //throw new IllegalArgumentException (LOG_TAG +getContext().getString(R.string.error_inserting_data) + uri);
         }
         // else return new uri with the id of inserted data
         return Uri.withAppendedPath(uri, String.valueOf(newRowId));
@@ -141,7 +145,9 @@ public class ProductProvider extends ContentProvider {
                 deletedRows = db.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
-                throw new IllegalArgumentException(getContext().getString(R.string.error_deleting_data) + uri);
+                Log.e(LOG_TAG, getContext().getString(R.string.error_deleting_data) + uri);
+                deletedRows = productUtility.INVALID;
+                //throw new IllegalArgumentException (LOG_TAG +getContext().getString(R.string.error_deleting_data) + uri);
         }
         getContext().getContentResolver().notifyChange(uri, null);
         return deletedRows;
@@ -153,7 +159,9 @@ public class ProductProvider extends ContentProvider {
 
         if (match == PRODUCT) {
             // because update only working if take row id not table names
-            throw new IllegalArgumentException(LOG_TAG + getContext().getString(R.string.error_updating_data) + uri);
+            Log.e(LOG_TAG, getContext().getString(R.string.error_updating_data) + uri);
+            return productUtility.INVALID;
+            //throw new IllegalArgumentException (LOG_TAG + getContext().getString(R.string.error_updating_data) + uri);
         }
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();

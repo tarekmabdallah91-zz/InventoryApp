@@ -37,8 +37,6 @@ limitations under the License.
     <style name="edit_text_style">
         <item name="android:layout_width">@dimen/edit_text_width</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/padding_margin_value</item>
-        <item name="android:padding">@dimen/padding_margin_value</item>
     </style>
 
     <!-- for textView displays error msg in editor layout -->
@@ -46,6 +44,7 @@ limitations under the License.
         <item name="android:textSize">@dimen/msg_texts_size</item>
         <item name="android:textColor">@color/error_msg_text_color</item>
         <item name="android:gravity">center</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <!-- for textView displays labels in editor layout -->

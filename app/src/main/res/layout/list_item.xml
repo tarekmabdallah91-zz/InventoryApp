@@ -76,8 +76,8 @@ limitations under the License.
             android:id="@+id/item_quantity"
             style="@style/item_text_style"
             android:textSize="@dimen/quantity_text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="@string/product_quantity" />
 
         <!-- item price-->
@@ -86,7 +86,7 @@ limitations under the License.
             style="@style/item_text_style"
             android:textSize="@dimen/price_text_size"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/item_code"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="@string/product_price" />
 
     </android.support.constraint.ConstraintLayout>

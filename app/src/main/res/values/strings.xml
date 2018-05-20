@@ -25,18 +25,22 @@ limitations under the License.
     <string name="btn_show_data">show</string>
     <string name="hint_edit_text">&#8230;</string>
     <string name="empty_text_msg">Sorry, There is no any data to show\nplease add some products to the Database</string>
-    <string name="no_data_for_input_value_msg">Sorry, There is no any data related to the entered value\nplease try again</string>
+    <string name="no_data_for_input_value_msg">Sorry, There is no any data\nrelated to the entered
+        value\nplease try again\nor choose another option to retrieve data\nrather than default as it will not retrieve any data</string>
     <string name="put_value_text_msg">Please, Enter a value then click show button\nto display the
         data\nor choose other choice to display the data</string>
 
 
     <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
     <string name="save_changes_dialog_msg">You have updated some fields.\nDo you still wish to save?</string>
-    <string name="delete_all_items_dialog_msg">you are about deleting all items
+    <string name="delete_all_items_dialog_msg">You are about deleting all items
+        \nAre you sure you want to continue?</string>
+    <string name="delete_one_item_dialog_msg">You are about deleting this item
         \nAre you sure you want to continue?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
     <string name="save_changes">Save changes</string>
+
 
     <string name="out_of_stock">Out of stock</string>
     <string name="free_item">Free</string>
@@ -59,21 +63,24 @@ limitations under the License.
     <string name="product_category">Product Category :</string>
     <string name="change_image">Click to change the image :</string>
 
-    <string name="count_msg">We have [ %d ] products\n</string>
-    <string name="error_with_saving_product">&#032; Error with saving product &#032;</string>
-    <string name="product_saved_with_row">&#032; Product saved successfully @id = &#032;</string>
-    <string name="error_displaying_data">&#032; can not display this data due to invalid uri : &#032;</string>
-    <string name="error_inserting_data">&#032; can not insert data the uri : &#032;</string>
-    <string name="error_updating_data">&#032; can not update data the uri : &#032;</string>
-    <string name="error_deleting_data">&#032; invalid uri :  </string>
-    <string name="repeated_input_value">&#032; this %s already entered before @id = %d&#032;</string>
-    <string name="invalid_input_user_catalog_activity">&#032; invalid value you should enter numbers up to %s digits</string>
-    <string name="all_items_deleted">&#032;rows had been Deleted </string>
+    <string name="count_msg">We have [ %d ] products</string>
+    <string name="error_with_saving_product"> Important values are missed check entered values again please </string>
+    <string name="product_saved_with_row"> Product saved successfully @id = </string>
+    <string name="product_deleted_with_row"> Product deleted successfully </string>
+    <string name="error_displaying_data"> Please check Logs, Cannot display this data due to invalid uri :</string>
+    <string name="error_inserting_data"> Please check Logs, Cannot insert data the uri : </string>
+    <string name="error_updating_data"> Please check Logs, Cannot update data the uri : </string>
+    <string name="error_deleting_data"> Please check Logs, Cannot delete this items : </string>
+    <string name="repeated_input_value"> this %s already entered before @id = %d</string>
+    <string name="invalid_input_user_catalog_activity"> invalid value you should enter numbers up to %s digits</string>
+    <string name="all_items_deleted">rows had been Deleted </string>
 
-    <string name="error_text">%s must begin with a letter and size %d - %d</string>
-    <string name="error_price">Please check price</string>
-    <string name="error_quantity">Please check quantity</string>
-    <string name="error_supp_phone">Please check supplier phone</string>
+    <string name="error_text">%s must begin with a letter and length %d - %d\n
+    No spaces or special characters allowed</string>
+    <string name="error_numeric_value">The %s can not be null, but can be 0</string>
+    <string name="error_supp_phone">Phone number length must be %d - %d</string>
+    <string name="error_description">description cannot be more than 1000 letters</string>
+    <string name="error_operation">Cannot do this operation</string>
 
     <string name="spinner_label_order_by">order by</string>
     <string name="spinner_label_search_for_name">search for Name</string>

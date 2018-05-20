@@ -60,7 +60,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
 
     // --Commented out by Inspection (18/05/2018 01:37 ص):private static final String TAG = CatalogActivity.class.getSimpleName();
-    private static final String LAST_ID_KEY = "last id";
+
     @BindView(R.id.warn_image)
     ImageView warnImage;
     @BindView(R.id.btn_show_data)
@@ -107,8 +107,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     String allItemsDeletedMsg;
     @BindString(R.string.action_insert_dummy_item)
     String insertDummyItem;
-    @BindString(R.string.keep_editing)
-    String keepMsg;
+    @BindString(R.string.discard)
+    String discardMsg;
     @BindString(R.string.delete_all_items_dialog_msg)
     String deleteAllItemsMsg;
     @BindInt(R.integer.price_max_length)
@@ -123,15 +123,13 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     private ScreenSizeUtility screenSizeUtility;
     private ProductDbQuery productDbQuery;
+    private ProductUtility productUtility;
     private CursorAdapter cursorAdapter;
     private boolean defaultLoaderStateChanged = false;
     private String selection;
     private String moreOrLessSign;
     private String sortOrder;
 
-    public static String getLastIdKey() {
-        return LAST_ID_KEY;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,6 +144,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         setContentView(R.layout.activity_catalog);
         ButterKnife.bind(this);
 
+        productUtility = new ProductUtility();
         productDbQuery = new ProductDbQuery(this);
         screenSizeUtility = new ScreenSizeUtility(this);
         setUI();
@@ -178,7 +177,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         setSpinnerOrderOrSearch();
         setFab();
         setInputFieldVisibility(View.GONE); // to hide it tell user want to enter some values to show certain queries
-        setViewsMode(ProductUtility.DEFAULT_MODE); // as default mode
+        setViewsMode(productUtility.DEFAULT_MODE); // as default mode
     }
 
     /**
@@ -196,7 +195,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     }
 
     private DialogInterface.OnClickListener getDialogInterfaceOnClickListener(String usage) {
-        if (usage.equals(keepMsg)) {
+        if (usage.equals(discardMsg)) {
             return new DialogInterface.OnClickListener() {
                 // user want to edit
                 @Override
@@ -241,15 +240,15 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 String itemName = (String) adapterSpinnerOrderBy.getItem(position);
                 String[] parts;
                 if (mode.equals(spinnerLabelOrderBy) || mode.equals(moreOrLessSign)) {// mode order by
-                    if (itemName.contains(ProductUtility.MINUS)) { // like : price/quantity - more / less than
-                        parts = itemName.split(ProductUtility.SPLITTER_REGEX_MINUS);
+                    if (itemName.contains(productUtility.MINUS)) { // like : price/quantity - more / less than
+                        parts = itemName.split(productUtility.SPLITTER_REGEX_MINUS);
                         selection = parts[ProductUtility.ZERO];
-                        if (parts[ProductUtility.ONE].contains(ProductUtility.MORE_THAN)) {
-                            sortOrder = selection + ProductUtility.ASC;
-                            moreOrLessSign = ProductUtility.MORE_THAN_SIGN;
-                        } else if (parts[ProductUtility.ONE].contains(ProductUtility.LESS_THAN)) {
-                            sortOrder = selection + ProductUtility.DESC;
-                            moreOrLessSign = ProductUtility.LESS_THAN_SIGN;
+                        if (parts[ProductUtility.ONE].contains(productUtility.MORE_THAN)) {
+                            sortOrder = selection + productUtility.ASC;
+                            moreOrLessSign = productUtility.MORE_THAN_SIGN;
+                        } else if (parts[ProductUtility.ONE].contains(productUtility.LESS_THAN)) {
+                            sortOrder = selection + productUtility.DESC;
+                            moreOrLessSign = productUtility.LESS_THAN_SIGN;
                         }
                         setViewsMode(moreOrLessSign);
                         selection = selection + moreOrLessSign;// to add sign to selection whatever was it's case
@@ -275,7 +274,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                                 defaultLoaderStateChanged = false;
                                 sortOrder = null;
                             }
-                            restartLoaderOnQueryBundleChange(ProductUtility.getBundle(null, null, sortOrder));
+                            restartLoaderOnQueryBundleChange(productUtility.getBundle(null, null, sortOrder));
                         }
                     }
                 }
@@ -331,7 +330,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
      */
     private void setViewsMode(String mode) {
         setMode(mode);
-        if (mode.equals(ProductUtility.DEFAULT_MODE) || mode.equals(spinnerLabelOrderBy)) {
+        if (mode.equals(productUtility.DEFAULT_MODE) || mode.equals(spinnerLabelOrderBy)) {
             spinnerOrderBy.setVisibility(View.VISIBLE);
             inputNumber.setVisibility(View.GONE);
             inputText.setVisibility(View.GONE);
@@ -361,28 +360,28 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         String[] selectionArgs;
         String errorMsg;
         if (mode.equals(moreOrLessSign)) {// get input number from user
-            result = ProductUtility.checkEnteredNumbers(ProductUtility.getTextEditText(inputNumber));
+            result = productUtility.checkEnteredNumbers(productUtility.getTextEditText(inputNumber));
             selectionArgs = new String[]{result[ProductUtility.ONE]};
             errorMsg = String.format(invalidInput, priceMaxLength);
         } else { // get input text from user
-            result = ProductUtility.checkEnteredTextToSearch(ProductUtility.getTextEditText(inputText));
+            result = productUtility.checkEnteredTextToSearch(productUtility.getTextEditText(inputText));
             /* EDIT selection here because SQL SELECTION must be expression contains something like "=?"
-             * and in this case there is no any expression make the statement is correctly read  , so to avoid this error *
-             * Caused by: android.database.sqlite.SQLiteException: near "LIKE": syntax error (code 1): , while compiling: SELECT * FROM Products WHERE Name LIKE
-             * add the input value to the selection directly to be as : WHERE name LIKE '%(inputValue)%'
-             * and must make selection args = null to avoid any code interfaces */
-            String columnName = mode.split(ProductUtility.SPLITTER_REGEX_COLUMN_NAME,
-                    ProductUtility.TEN)[ProductUtility.ONE];
-            selection = columnName + ProductUtility.LIKE + result[ProductUtility.ONE];
+              and in this case there is no any expression make the statement is correctly read  , so to avoid this error *
+              Caused by: android.database.sqlite.SQLiteException: near "LIKE": syntax error (code 1): ,while compiling: SELECT * FROM Products WHERE Name LIKE
+              add the input value to the selection directly to be as : WHERE name LIKE '%(inputValue)%'
+              and must make selection args = null to avoid any code interfaces  */
+            String columnName = mode.split(productUtility.SPLITTER_REGEX_COLUMN_NAME,
+                    productUtility.TEN)[ProductUtility.ONE];
+            selection = columnName + productUtility.LIKE + result[ProductUtility.ONE];
             selectionArgs = null;
             sortOrder = columnName; // to be ordered by the column name
             errorMsg = String.format(invalidName, ProductEntry.COLUMN_PRODUCT_NAME, textMinLength, textMaxLength);
         }
         String flag = result[ProductUtility.ZERO];
-        if (flag.equals(ProductUtility.TRUE)) {
-            ProductUtility.showToastMsg(getBaseContext(), errorMsg);
+        if (flag.equals(productUtility.TRUE)) {
+            productUtility.showToastMsg(getBaseContext(), errorMsg);
         } else {
-            Bundle args = ProductUtility.getBundle(
+            Bundle args = productUtility.getBundle(
                     selection,
                     selectionArgs,
                     sortOrder);
@@ -400,7 +399,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             @Override
             public void onClick(View view) {
                 Intent openEditorActivity = new Intent(CatalogActivity.this, EditorActivity.class);
-                openEditorActivity.putExtra(LAST_ID_KEY, lastId);
+                openEditorActivity.putExtra(productUtility.LAST_ID_KEY, lastId);
                 startActivity(openEditorActivity);
             }
         });
@@ -412,7 +411,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     private void setListView() {
         cursorAdapter = new ProductCursorAdapter(this, null);
         int paddingSidesValue = ProductUtility.ZERO;
-        int paddingBottomValue = screenSizeUtility.getHeight() / ProductUtility.FOUR;
+        int paddingBottomValue = screenSizeUtility.getHeight() / productUtility.FOUR;
 
         listView.setEmptyView(emptyTextView);
         listView.setPadding(paddingSidesValue, paddingSidesValue, paddingSidesValue, paddingBottomValue);
@@ -438,12 +437,12 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             if (mode.equals(insertDummyItem)) {
                 productDbQuery.insertData(null); // to insert dummy values
             } else if (mode.equals(deleteAllItems)) {
-                showDiscardMsg(deleteAllItemsMsg, keepMsg, deleteAllItems);
+                showDiscardMsg(deleteAllItemsMsg, discardMsg, deleteAllItems);
             }
         } else {
-            selection = args.getString(ProductUtility.BUNDLE_KEY_SELECTION);
-            selectionArgs = args.getStringArray(ProductUtility.BUNDLE_KEY_SELECTION_ARGS);
-            sortOrder = args.getString(ProductUtility.BUNDLE_KEY_SORT_ORDER);
+            selection = args.getString(productUtility.BUNDLE_KEY_SELECTION);
+            selectionArgs = args.getStringArray(productUtility.BUNDLE_KEY_SELECTION_ARGS);
+            sortOrder = args.getString(productUtility.BUNDLE_KEY_SORT_ORDER);
 
         }
         cursorLoader = new CursorLoader(this, ProductEntry.CONTENT_URI,
@@ -456,25 +455,29 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (data == null) {
-            warnImage.setImageResource(R.drawable.icons8_empty_box_48);
-            emptyTextView.setText(emptyTextMsg);
+        if (data.getCount() > ProductUtility.ZERO) {
+            cursorAdapter.swapCursor(data);
+            if (!defaultLoaderStateChanged) {// to get last id just on the default case when loads all data only
+                if (data.moveToLast()) {
+                    lastId = data.getInt(data.getColumnIndex(ProductEntry._ID));
+                }
+            }
+            countRowsTextView.setText(String.format(catalogLabel, data.getCount()));
+            warnImage.setImageResource(ProductUtility.ZERO);
+            emptyTextView.setVisibility(View.GONE);
             return;
         }
 
-        cursorAdapter.swapCursor(data);
-        if (!defaultLoaderStateChanged) {// to get last id just on the default case when loads all data only
-            if (data.moveToLast()) {
-                lastId = data.getInt(data.getColumnIndex(ProductEntry._ID));
-            }
-        }
+        cursorAdapter.swapCursor(null);
+        listView.setEmptyView(emptyTextView);
         countRowsTextView.setText(String.format(catalogLabel, data.getCount()));
+        warnImage.setImageResource(R.drawable.icons8_empty_box_64);
+        emptyTextView.setText(emptyTextMsg);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.swapCursor(null);
-        //loader.abandon();
     }
 
     /**

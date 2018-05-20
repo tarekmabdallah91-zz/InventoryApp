@@ -108,7 +108,7 @@ limitations under the License.
             <TextView
                 android:id="@+id/error_msg_price"
                 style="@style/error_msg_text_views_style"
-                tools:text="@string/error_price" />
+                tools:text="@string/error_numeric_value" />
         </LinearLayout>
 
         <!-- product quantity label , edit text and error msg -->
@@ -129,7 +129,7 @@ limitations under the License.
             <TextView
                 android:id="@+id/error_msg_quantity"
                 style="@style/error_msg_text_views_style"
-                tools:text="@string/error_quantity" />
+                tools:text="@string/error_numeric_value" />
         </LinearLayout>
 
         <!-- product supplier name label , edit text and error msg  -->
@@ -166,7 +166,7 @@ limitations under the License.
                 android:layout_gravity="center_horizontal"
                 android:hint="@string/supplier_phone"
                 android:inputType="phone"
-                android:maxLength="@integer/phone_number_min_length" />
+                android:maxLength="@integer/phone_number_max_length" />
 
             <TextView
                 android:id="@+id/error_msg_supplier_phone"
@@ -221,7 +221,7 @@ limitations under the License.
             <TextView
                 android:id="@+id/error_msg_description"
                 style="@style/error_msg_text_views_style"
-                tools:text="@string/error_text" />
+                tools:text="@string/error_description" />
         </LinearLayout>
 
     </LinearLayout>

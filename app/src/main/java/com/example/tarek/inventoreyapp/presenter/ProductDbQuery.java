@@ -32,9 +32,11 @@ public class ProductDbQuery {
 
     private final Context context;
     // --Commented out by Inspection (18/05/2018 01:37 ص):private static final String LOG_TAG = ProductDbQuery.class.getSimpleName();
+    private ProductUtility productUtility;
 
     public ProductDbQuery(Context context) {
         this.context = context;
+        productUtility = new ProductUtility();
     }
 
     /**
@@ -46,7 +48,7 @@ public class ProductDbQuery {
         return context.getContentResolver().query(
                 ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id)
                 , null, //select * from table where _ID =? id
-                ProductEntry._ID + ProductUtility.SIGN_ID, new String[]{String.valueOf(id)}, null);
+                ProductEntry._ID + productUtility.SIGN_ID, new String[]{String.valueOf(id)}, null);
     }
 
     /**
@@ -61,38 +63,38 @@ public class ProductDbQuery {
     }
 
     /**
-     * when user update product if category or code match one int db then show toast msg to tell him that
+     * when user update product if name or code match one int db then show toast msg to tell him that
      *
-     * @param values to check it's category and code
+     * @param values to check it's name and code
      * @return -1 if repeated or 1 is not repeated
      */
-    private int ifCategoryOrCodeRepeatedShowToast(ContentValues values, int id) {
+    private int ifNameOrCodeRepeatedShowToast(ContentValues values, int id) {
         // if current id != matched id AND matched id != -1 , means that the category/code repeated
-        int matchedId = categoryOrCodeRepeated(values, ProductEntry.COLUMN_PRODUCT_CODE);
-        if (matchedId != ProductUtility.INVALID && matchedId != id) {
-            ProductUtility.showToastMsg(context,
+        int matchedId = nameOrCodeRepeated(values, ProductEntry.COLUMN_PRODUCT_CODE);
+        if (matchedId != productUtility.INVALID && matchedId != id) {
+            productUtility.showToastMsg(context,
                     context.getString(R.string.repeated_input_value, ProductEntry.COLUMN_PRODUCT_CODE, matchedId));
-            return ProductUtility.INVALID;
+            return productUtility.INVALID;
         }
-        matchedId = categoryOrCodeRepeated(values, ProductEntry.COLUMN_PRODUCT_CATEGORY);
-        if (matchedId != ProductUtility.INVALID && matchedId != id) {
-            ProductUtility.showToastMsg(context,
-                    context.getString(R.string.repeated_input_value, ProductEntry.COLUMN_PRODUCT_CATEGORY, matchedId));
-            return ProductUtility.INVALID;
+        matchedId = nameOrCodeRepeated(values, ProductEntry.COLUMN_PRODUCT_NAME);
+        if (matchedId != productUtility.INVALID && matchedId != id) {
+            productUtility.showToastMsg(context,
+                    context.getString(R.string.repeated_input_value, ProductEntry.COLUMN_PRODUCT_NAME, matchedId));
+            return productUtility.INVALID;
         }
-        return ProductUtility.VALID;
+        return productUtility.VALID;
     }
 
     /**
-     * check category and code contained in @param values are found or not
+     * check name and code contained in @param values are found or not
      *
      * @param values     to check it's code/category
-     * @param columnName to be dynamic for code/category column
+     * @param columnName to be dynamic for code/name column
      * @return true if repeated or false if  not repeated
      */
-    private int categoryOrCodeRepeated(ContentValues values, String columnName) {
+    private int nameOrCodeRepeated(ContentValues values, String columnName) {
         return (DatabaseContainsText(
-                queryDataByColumnName(new String[]{ProductEntry._ID, columnName}), // cursor of _ID & product category/code
+                queryDataByColumnName(new String[]{ProductEntry._ID, columnName}), // cursor of _ID & product name/code
                 columnName, // to get it's String value from the cursor
                 values.getAsString(columnName))); // current String value by key @param columnName
         // returns -1 if not found or matched id if found
@@ -101,21 +103,21 @@ public class ProductDbQuery {
     /**
      * to get unrepeated dummyValue for code / category
      *
-     * @param type       code/category
-     * @param columnName code/category
-     * @return unrepeated dummyValue for code / category
+     * @param type       code/name
+     * @param columnName code/name
+     * @return unrepeated dummyValue for code / name
      */
-    private String getUniqueCategoryOrCode(String columnName, String type) {
-        String text = type + ProductUtility.getRandomValue();// like code120
+    private String getUniqueNameOrCode(String columnName, String type) {
+        String text = type + productUtility.getRandomValue();// like code120
         int count = ProductUtility.ZERO; // for iterations
-        while (count < ProductUtility.LIMIT_RANDOM_VALUE && DatabaseContainsText(
+        while (count < productUtility.LIMIT_RANDOM_VALUE && DatabaseContainsText(
                 queryDataByColumnName(new String[]{columnName}),
-                columnName, text) == ProductUtility.INVALID) { // get all text in this column to be compared with the random text
-            text = type + ProductUtility.getRandomValue();
+                columnName, text) == productUtility.INVALID) { // get all text in this column to be compared with the random text
+            text = type + productUtility.getRandomValue();
             count++;
         }
-        if (count == ProductUtility.LIMIT_RANDOM_VALUE) {
-            text = ProductUtility.SIGN_ID; // as Invalid data to br rejected in the next step
+        if (count == productUtility.LIMIT_RANDOM_VALUE) {
+            text = productUtility.SIGN_ID; // as Invalid data to br rejected in the next step
         }
         return text;
     }
@@ -131,22 +133,23 @@ public class ProductDbQuery {
         /*  ==========================================( these lines  just for dummy data )==========+==============================
          *  if user want to insert dummy data to database directly means that values = null so generate a dummy values
          *  category and code of products cannot be repeated they must be unique values
-         *  check if the random value is matched to category/code in database then repeat the iteration till ProductUtility.LIMIT_RANDOM_VALUE
+         *  check if the random value is matched to category/code in database then repeat the iteration till productUtility.LIMIT_RANDOM_VALUE
          *  if it still repeat the category / code so set the text with  SIGN_ID as just a placeholder data
          *  it text = SIGN_ID show toast msg tell the user that cannot insert this product because it is repeated ,
-         *  return ProductUtility.INVALID
+         *  return productUtility.INVALID
          */
-        ContentValues values = ProductUtility.getDummyContentValues();  // to insert dummy values
+        ContentValues values = productUtility.getDummyContentValues();  // to insert dummy values
         String text;
-        if (categoryOrCodeRepeated(values, ProductEntry.COLUMN_PRODUCT_CODE) != ProductUtility.INVALID) { // check code repeated or not
-            text = getUniqueCategoryOrCode(ProductEntry.COLUMN_PRODUCT_CODE, values.getAsString(ProductEntry.COLUMN_PRODUCT_CODE));
-            if (!text.equals(ProductUtility.SIGN_ID))
+        if (nameOrCodeRepeated(values, ProductEntry.COLUMN_PRODUCT_CODE) != productUtility.INVALID) { // check code repeated or not
+            text = getUniqueNameOrCode(ProductEntry.COLUMN_PRODUCT_CODE, values.getAsString(ProductEntry.COLUMN_PRODUCT_CODE));
+            if (!text.equals(productUtility.SIGN_ID))
                 values.put(ProductEntry.COLUMN_PRODUCT_CODE, text);
         }
-        if (categoryOrCodeRepeated(values, ProductEntry.COLUMN_PRODUCT_CATEGORY) != ProductUtility.INVALID) { // check category repeated or not
-            text = getUniqueCategoryOrCode(ProductEntry.COLUMN_PRODUCT_CATEGORY, values.getAsString(ProductEntry.COLUMN_PRODUCT_CATEGORY));
-            if (!text.equals(ProductUtility.SIGN_ID))
-                values.put(ProductEntry.COLUMN_PRODUCT_CATEGORY, text);
+        if (nameOrCodeRepeated(values, ProductEntry.COLUMN_PRODUCT_NAME) != productUtility.INVALID) { // check category repeated or not
+            text = getUniqueNameOrCode(ProductEntry.COLUMN_PRODUCT_NAME,
+                    values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME));
+            if (!text.equals(productUtility.SIGN_ID))
+                values.put(ProductEntry.COLUMN_PRODUCT_NAME, text);
         }
         return values;
     }
@@ -157,9 +160,9 @@ public class ProductDbQuery {
     public boolean insertData(ContentValues values) {
         if (values == null) values = getNewDummyValues();
 
-        if (values.size() < ProductUtility.NOT_NULLABLE_COLUMNS_COUNT) return false;
+        if (values.size() < productUtility.NOT_NULLABLE_COLUMNS_COUNT) return false;
 
-        if (ifCategoryOrCodeRepeatedShowToast(values, ProductUtility.INVALID) == ProductUtility.INVALID)
+        if (ifNameOrCodeRepeatedShowToast(values, productUtility.INVALID) == productUtility.INVALID)
             return false;
 
         Uri newRowUri = context.getContentResolver().insert(ProductEntry.CONTENT_URI, values);
@@ -167,21 +170,21 @@ public class ProductDbQuery {
         // Show a toast message depending on whether or not the insertion was successful
         if (newRowUri == null) {
             // If the row ID is -1, then there was an error with insertion.
-            ProductUtility.showToastMsg(context,
+            productUtility.showToastMsg(context,
                     context.getResources().getString(R.string.error_with_saving_product));
             return false;
         } else {
             // Otherwise, the insertion was successful and we can display a toast with the row ID.
-            ProductUtility.showToastMsg(context,
+            productUtility.showToastMsg(context,
                     context.getResources().getString(R.string.product_saved_with_row) + ContentUris.parseId(newRowUri));
             return true;
         }
     }
 
     public int update(ContentValues values, String selection, int id) {
-        // if the user changed category / code to one which already in the database return ProductUtility.INVALID;
-        if (ifCategoryOrCodeRepeatedShowToast(values, id) == ProductUtility.INVALID) {
-            return ProductUtility.INVALID;
+        // if the user changed category / code to one which already in the database return productUtility.INVALID;
+        if (ifNameOrCodeRepeatedShowToast(values, id) == productUtility.INVALID) {
+            return productUtility.INVALID;
         }
         Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
         return context.getContentResolver().update(uri, values, selection, new String[]{String.valueOf(id)});
@@ -200,8 +203,11 @@ public class ProductDbQuery {
      * method to delete  row by id
      */
     public int deleteById(int id) {
-        return context.getContentResolver().delete(ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id) // uri of id path
-                , ProductEntry._ID + ProductUtility.SIGN_ID, new String[]{String.valueOf(id)});
+        int deletedRow = context.getContentResolver().delete(ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id) // uri of id path
+                , ProductEntry._ID + productUtility.SIGN_ID, new String[]{String.valueOf(id)});
+        productUtility.showToastMsg(context,
+                context.getResources().getString(R.string.product_deleted_with_row));
+        return deletedRow;
 
     }
 
@@ -229,10 +235,10 @@ public class ProductDbQuery {
     private int DatabaseContainsText(Cursor cursor, String columnName, String text) {
         while (cursor.moveToNext()) {
             // if there is matched value then get it's id
-            if (text.equals(cursor.getString(cursor.getColumnIndex(columnName)))) {
+            if (text != null && text.equals(cursor.getString(cursor.getColumnIndex(columnName)))) {
                 return cursor.getInt(cursor.getColumnIndex(ProductEntry._ID));
             }
         }
-        return ProductUtility.INVALID;
+        return productUtility.INVALID;
     }
 }

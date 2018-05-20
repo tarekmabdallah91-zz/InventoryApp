@@ -32,9 +32,10 @@ import com.example.tarek.inventoreyapp.utils.ProductUtility;
 
 public class ProductCursorAdapter extends CursorAdapter {
 
-
+    private final ProductUtility productUtility;
     public ProductCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
+        productUtility = new ProductUtility();
     }
 
     @Override
@@ -111,7 +112,7 @@ public class ProductCursorAdapter extends CursorAdapter {
             textView.setText(context.getString(R.string.free_item));
             textView.setBackgroundColor(context.getResources().getColor(R.color.free_item_color));
         } else {
-            String productPrice = String.valueOf(price) + ProductUtility.DUMMY_PRODUCT_PRICE + ProductUtility.DOLLAR_SIGN;
+            String productPrice = String.valueOf(price + productUtility.DUMMY_PRODUCT_PRICE) + productUtility.DOLLAR_SIGN;
             textView.setText(productPrice);
         }
     }
@@ -124,7 +125,7 @@ public class ProductCursorAdapter extends CursorAdapter {
      */
     private void setItemImage(ImageView imageView, byte[] imageBytes) {
         if (imageBytes == null) { // as default icon
-            imageView.setImageResource(R.drawable.if_diagram_v2_17_37137);
+            imageView.setImageResource(R.drawable.icons8_warehouse_64);
         } else {
             imageView.setImageBitmap(ImageUtility.byteArrayToBitmap(imageBytes));
         }
