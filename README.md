@@ -1,6 +1,8 @@
 # InventoryApp
 If you like it , don't forget to give it a star please :)
 
+# Youtube
+https://youtu.be/dRljpruEVbM
 
 # License:
 
