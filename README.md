@@ -1,5 +1,7 @@
 # InventoryApp
-If you like it , don't forget to give it a star please :)
+The main goal of this project was connecting to sqlite database and doing "CURD" correctly,  
+I will appreciate any feedback or suggestions :)      
+If you like it , don't forget to give it a star please ;)
 
 # Youtube
 https://youtu.be/dRljpruEVbM
