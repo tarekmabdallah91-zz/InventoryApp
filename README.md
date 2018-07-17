@@ -5,7 +5,7 @@ I will appreciate any feedback or suggestions :)
 If you like it , don't forget to give it a star please ;)
 
 # Youtube
-stage 1 : https://youtu.be/dRljpruEVbM - simple UI.
+stage 1 : https://youtu.be/dRljpruEVbM - simple UI.     
 stage 2 : https://youtu.be/sT-HZ65mrcU - Fragments and SharedPreferences.
 
 # License:
