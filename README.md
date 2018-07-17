@@ -1,5 +1,5 @@
 # InventoryApp
-The main goal of this project was connecting to sqlite database and doing "CURD" correctly,
+The main goal of this project was connecting to sqlite database and doing "CURD" correctly,     
 But I added some features like Fragments and SharedPreferences .
 I will appreciate any feedback or suggestions :)      
 If you like it , don't forget to give it a star please ;)
