@@ -21,7 +21,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.tarek.inventoreyapp.database.contract.ProductContract.ProductEntry;
-import com.example.tarek.inventoreyapp.utils.ProductUtility;
+
 
 public class ProductDbHelper extends SQLiteOpenHelper {
 
@@ -40,7 +40,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
     private static final String CLOSE_BRACKET = ")";
     private static final String COMA = ",";
     private static final String SEMI_COLUMN = ";";
-
+    private static final int ZERO = 0;
     public ProductDbHelper(Context context) {
         super(context, Db_NAME, null, Db_VERSION);
     }
@@ -54,7 +54,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
                         ProductEntry.COLUMN_PRODUCT_CODE + TEXT + NOT_NULL + COMA +
                         ProductEntry.COLUMN_PRODUCT_CATEGORY + TEXT + NOT_NULL + COMA +
                         ProductEntry.COLUMN_PRODUCT_PRICE + INTEGER + NOT_NULL + COMA +
-                        ProductEntry.COLUMN_PRODUCT_QUANTITY + INTEGER + NOT_NULL + DEFAULT + ProductUtility.ZERO + COMA +
+                        ProductEntry.COLUMN_PRODUCT_QUANTITY + INTEGER + NOT_NULL + DEFAULT + ZERO + COMA +
                         ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + TEXT + NOT_NULL + COMA +
                         ProductEntry.COLUMN_PRODUCT_SUPPLIER_PHONE + TEXT + NOT_NULL + COMA +
                         ProductEntry.COLUMN_PRODUCT_DESCRIPTION + TEXT + COMA +
