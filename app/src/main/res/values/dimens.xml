@@ -27,7 +27,7 @@ limitations under the License.
     <dimen name="quantity_text_size">16sp</dimen>
 
     <dimen name="default_texts_size">18sp</dimen>
-    <dimen name="msg_texts_size">14sp</dimen>
+    <dimen name="msg_texts_size">16sp</dimen>
 
     <dimen name="item_image_size">70dp</dimen>
 

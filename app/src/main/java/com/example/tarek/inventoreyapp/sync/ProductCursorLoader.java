@@ -128,7 +128,7 @@ public class ProductCursorLoader extends AsyncTaskLoader<Cursor> implements Cons
                             selection2 += LESS_THAN_SIGN; // column name <=?
                         }
                         result = productUtils.checkEnteredNumbers(inputText);
-                        if (FALSE.equals(result[ZERO])) {
+                        if (TRUE.equals(result[ZERO])) {
                             Toast.makeText(getContext(), context.getResources().
                                             getString(R.string.error_input_number),
                                     Toast.LENGTH_LONG).show();
