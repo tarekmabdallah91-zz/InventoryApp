@@ -13,12 +13,5 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<resources>
 
-    <integer name="text_max_length">30</integer>
-    <integer name="text_min_length">3</integer>
-
-    <integer name="phone_number_max_length">15</integer>
-    <integer name="quantity_max_length">3</integer>
-    <integer name="description_max_length">1000</integer>
-</resources>
+<resources></resources>

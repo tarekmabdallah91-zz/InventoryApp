@@ -19,11 +19,8 @@ limitations under the License.
 
     <string name="update_product">Update Id # </string>
     <string name="details_product">Product # </string>
-    <string name="add_product">Add product # </string>
-    <string name="catalog_label">We have [ %d ] items</string>
-    <string name="spinner_summary">Data shown as</string>
-    <string name="btn_show_data">show</string>
-    <string name="hint_edit_text">&#8230;</string>
+    <string name="add_product">Add new product</string>
+    <string name="catalog_label">[ %d ] items result of</string>
     <string name="empty_text_msg">Sorry, There is no any data to show\nplease add some products to the Database</string>
     <string name="no_data_for_input_value_msg">Sorry, There is no any data\nrelated to the entered
         value\nplease try again\nor choose another option to retrieve data\nrather than default as it will not retrieve any data</string>
@@ -41,9 +38,18 @@ limitations under the License.
     <string name="keep_editing">Keep Editing</string>
     <string name="save_changes">Save changes</string>
 
+    <string name="description_synced_item">description_synced_item</string>
+    <string name="description_favoured_item">description_favoured_item</string>
+    <string name="settings_label">Settings</string>
 
     <string name="out_of_stock">Out of stock</string>
     <string name="free_item">Free</string>
+
+    <string name="title_fragment0">All Products</string>
+    <string name="title_fragment1">Synced Products</string>
+    <string name="title_fragment2">Not Synced Products</string>
+    <string name="title_fragment3">favoured</string>
+
 
     <string name="action_insert_dummy_item">Insert dummy item</string>
     <string name="action_fill_fields_with_dummy_data">Fill fields with dummy data</string>
@@ -63,7 +69,7 @@ limitations under the License.
     <string name="product_category">Product Category :</string>
     <string name="change_image">Click to change the image :</string>
 
-    <string name="count_msg">We have [ %d ] products</string>
+    <string name="count_msg">[ %d ] items:</string>
     <string name="error_with_saving_product"> Important values are missed check entered values again please </string>
     <string name="product_saved_with_row"> Product saved successfully @id = </string>
     <string name="product_deleted_with_row"> Product deleted successfully </string>
@@ -81,23 +87,59 @@ limitations under the License.
     <string name="error_supp_phone">Phone number length must be %d - %d</string>
     <string name="error_description">description cannot be more than 1000 letters</string>
     <string name="error_operation">Cannot do this operation</string>
+    <string name="error_input_number">Please Enter a valid number </string>
 
-    <string name="spinner_label_order_by">order by</string>
-    <string name="spinner_label_search_for_name">search for Name</string>
-    <string name="spinner_label_search_for_category">search for Category</string>
-    <string name="spinner_label_search_for_code">search for Code</string>
+    <string name="sort_or_search_key" translatable="false">sortOrSearch</string>
+    <string name="order_key" translatable="false">order_key</string>
+    <string name="search_key" translatable="false">search_key</string>
+    <string name="sort_or_search_title">Sort / Search</string>
+    <string name="order_title">Order By</string>
+    <string name="search_tile">Search </string>
 
-    <string name="spinner_label_order_by_default">default</string>
-    <string name="spinner_label_id">Id</string>
-    <string name="spinner_label_name">Name</string>
-    <string name="spinner_label_category">Category</string>
-    <string name="spinner_label_price_lowest_first">Price ASC</string>
-    <string name="spinner_label_price_highest_first">Price DESC</string>
-    <string name="spinner_label_price_more_than">Price - more than</string>
-    <string name="spinner_label_price_less_than">Price - less than</string>
-    <string name="spinner_label_quantity_lowest_first">Quantity ASC</string>
-    <string name="spinner_label_quantity_highest_first">Quantity DESC</string>
-    <string name="spinner_label_quantity_more_than">Quantity - more than</string>
-    <string name="spinner_label_quantity_less_than">Quantity - less than</string>
+    <string name="key_order_by">Order by</string>
+    <string name="key_search_for_name">Search for Name</string>
+    <string name="key_search_for_category">Search for Category</string>
+    <string name="key_search_for_code">Search for Code</string>
+
+    <string name="value_sort_or_search_default_value" translatable="false">none</string>
+    <string name="value_order_by" translatable="false">order by</string>
+    <string name="value_search_for_name" translatable="false">search for Name</string>
+    <string name="value_search_for_category" translatable="false">search for Category</string>
+    <string name="value_search_for_code" translatable="false">search for Code</string>
+
+
+    <string name="key_order_by_id">Id</string>
+    <string name="key_order_by_name">Name</string>
+    <string name="key_order_by_category">Category</string>
+    <string name="key_order_by_price_lowest_first">Price ASC</string>
+    <string name="key_order_by_price_highest_first">Price DESC</string>
+    <string name="key_search_for_price_more_than">Price - more than</string>
+    <string name="key_search_for_price_less_than">Price - less than</string>
+    <string name="key_order_by_quantity_lowest_first">Quantity ASC</string>
+    <string name="key_order_by_quantity_highest_first">Quantity DESC</string>
+    <string name="key_search_for_quantity_more_than">Quantity - more than</string>
+    <string name="key_search_for_quantity_less_than">Quantity - less than</string>
+
+
+    <string name="value_order_by_id" translatable="false">_id</string>
+    <string name="value_order_by_name" translatable="false">Name</string>
+    <string name="value_order_by_category" translatable="false">Category</string>
+    <string name="value_order_by_price_lowest_first" translatable="false">Price ASC</string>
+    <string name="value_order_by_price_highest_first" translatable="false">Price DESC</string>
+    <string name="value_search_for_price_more_than" translatable="false">Price - more than</string>
+    <string name="value_search_for__price_less_than" translatable="false">Price - less than</string>
+    <string name="value_order_by_quantity_lowest_first" translatable="false">Quantity ASC</string>
+    <string name="value_order_by_quantity_highest_first" translatable="false">Quantity DESC</string>
+    <string name="value_search_for__quantity_more_than" translatable="false">Quantity - more than</string>
+    <string name="value_search_for__quantity_less_than" translatable="false">Quantity - less than</string>
+
+
+    <string name="description_error_image_view_fragment_item">description_error_image_view_fragment_item</string>
+    <string name="title_preference_category_un_synced_products">UnSynced Products</string>
+    <string name="tag_Icons_off">off</string>
+    <string name="tag_Icons_on">on</string>
+    <string name="item_image_description">item_image_description</string>
+    <string name="share_product">Share Product</string>
+
 
 </resources>

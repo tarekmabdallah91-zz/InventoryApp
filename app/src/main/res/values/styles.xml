@@ -22,21 +22,15 @@ limitations under the License.
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorWindowBackGround</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- general style for all editTexts in editor layout -->
     <style name="edit_text_style">
         <item name="android:layout_width">@dimen/edit_text_width</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
     <!-- for textView displays error msg in editor layout -->
@@ -44,25 +38,39 @@ limitations under the License.
         <item name="android:textSize">@dimen/msg_texts_size</item>
         <item name="android:textColor">@color/error_msg_text_color</item>
         <item name="android:gravity">center</item>
-        <item name="android:visibility">gone</item>
+        <!--item name="android:visibility">gone</item-->
     </style>
 
     <!-- for textView displays labels in editor layout -->
     <style name="labels_text_views_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">start</item>
         <item name="android:textSize">@dimen/default_texts_size</item>
         <item name="android:textColor">@color/default_text_color</item>
     </style>
 
+    <!-- for textView displays labels in editor layout -->
+    <style name="count_msg_text_view_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/padding_margin_value_4spaces</item>
+        <item name="android:textSize">@dimen/default_texts_size</item>
+        <item name="android:textColor">@color/default_text_color</item>
+
+    </style>
+
     <!-- for images in editor layout -->
     <style name="image_views_style">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
+        <!--item name="android:layout_width">0dp</item- ->
+        <item name="android:layout_weight">1</item-->
+
+        <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/padding_margin_value</item>
-        <item name="android:contentDescription">@string/change_image</item>
-        <item name="android:src">@drawable/click_to_add_image</item>
+        <item name="android:layout_margin">@dimen/padding_margin_value_4spaces</item>
+        <item name="android:src">@drawable/ic_click_to_add_image</item>
     </style>
 
     <!-- general text style , text size is overwrite for each textView -->
@@ -71,26 +79,18 @@ limitations under the License.
         <item name="android:layout_height">wrap_content</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/default_text_color</item>
     </style>
 
     <!-- for all details of the product on editor layout -->
-    <style name="details_linear_layouts_style">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:layout_margin">@dimen/padding_margin_value</item>
-        <item name="android:padding">@dimen/padding_margin_value</item>
-        <item name="android:background">@color/background_details_linear_layout</item>
-    </style>
 
     <!-- 2nd linear layout contains 2 edit texts and button  -->
-    <style name="queries_layout_items">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">2</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/default_texts_size</item>
-        <item name="android:layout_margin">@dimen/padding_margin_value</item>
-        <item name="android:textColor">@color/default_text_color</item>
+
+    <!-- 2nd linear layout contains 2 edit texts and button  -->
+    <style name="items_icons_style">
+        <item name="android:layout_width">@dimen/items_icons_size</item>
+        <item name="android:layout_height">@dimen/items_icons_size</item>
+        <item name="android:scaleType">center</item>
     </style>
 
 

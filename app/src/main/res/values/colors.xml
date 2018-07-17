@@ -14,14 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#a1715f</color>
+    <color name="colorPrimaryDark">#5D4037</color>
+    <color name="colorAccent">#5D4037</color>
+    <color name="colorWindowBackGround">#9E9E9E</color>
 
-    <color name="default_text_color">#3F51B5</color>
+    <color name="icons_color">#795548</color>
+    <color name="default_text_color">#000000</color>
     <color name="error_msg_text_color">@android:color/holo_red_dark</color>
 
     <color name="out_off_stock_color">@android:color/holo_red_light</color>
     <color name="free_item_color">@android:color/holo_green_light</color>
-    <color name="background_details_linear_layout">@android:color/white</color>
+    <color name="default_selector_color">@android:color/darker_gray</color>
 </resources>

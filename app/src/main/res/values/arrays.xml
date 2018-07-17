@@ -14,28 +14,51 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <resources>
-
-    <array name="order_search">
-        <item>@string/spinner_label_order_by</item>
-        <item>@string/spinner_label_search_for_name</item>
-        <item>@string/spinner_label_search_for_code</item>
-        <item>@string/spinner_label_search_for_category</item>
+    <array name="order_or_search_entries_keys">
+        <item>@string/key_order_by</item>
+        <item>@string/key_search_for_name</item>
+        <item>@string/key_search_for_category</item>
+        <item>@string/key_search_for_code</item>
+        <item>@string/key_search_for_price_more_than</item>
+        <item>@string/key_search_for_price_less_than</item>
+        <item>@string/key_search_for_quantity_more_than</item>
+        <item>@string/key_search_for_quantity_less_than</item>
+    </array>
+    <array name="order_or_search_values">
+        <item>@string/value_order_by</item>
+        <item>@string/value_search_for_name</item>
+        <item>@string/value_search_for_category</item>
+        <item>@string/value_search_for_code</item>
+        <item>@string/value_search_for_price_more_than</item>
+        <item>@string/value_search_for__price_less_than</item>
+        <item>@string/value_search_for__quantity_more_than</item>
+        <item>@string/value_search_for__quantity_less_than</item>
     </array>
 
-    <array name="default_order_by">
-        <item>@string/spinner_label_order_by_default</item>
-        <item>@string/spinner_label_id</item>
-        <item>@string/spinner_label_name</item>
-        <item>@string/spinner_label_category</item>
-        <item>@string/spinner_label_price_lowest_first</item>
-        <item>@string/spinner_label_price_highest_first</item>
-        <item>@string/spinner_label_price_more_than</item>
-        <item>@string/spinner_label_price_less_than</item>
-        <item>@string/spinner_label_quantity_lowest_first</item>
-        <item>@string/spinner_label_quantity_highest_first</item>
-        <item>@string/spinner_label_quantity_more_than</item>
-        <item>@string/spinner_label_quantity_less_than</item>
+    <array name="sort_entries_keys">
+        <item>@string/key_order_by_id</item>
+        <item>@string/key_order_by_name</item>
+        <item>@string/key_order_by_category</item>
+        <item>@string/key_order_by_price_lowest_first</item>
+        <item>@string/key_order_by_price_highest_first</item>
+        <item>@string/key_order_by_quantity_lowest_first</item>
+        <item>@string/key_order_by_quantity_highest_first</item>
+    </array>
+    <array name="sort_entries_values">
+        <item>@string/value_order_by_id</item>
+        <item>@string/value_order_by_name</item>
+        <item>@string/value_order_by_category</item>
+        <item>@string/value_order_by_price_lowest_first</item>
+        <item>@string/value_order_by_price_highest_first</item>
+        <item>@string/value_order_by_quantity_lowest_first</item>
+        <item>@string/value_order_by_quantity_highest_first</item>
     </array>
 
+    <array name="fragment_titles">
+        <item>@string/title_fragment0</item>
+        <item>@string/title_fragment1</item>
+        <item>@string/title_fragment2</item>
+        <item>@string/title_fragment3</item>
+    </array>
 
 </resources>

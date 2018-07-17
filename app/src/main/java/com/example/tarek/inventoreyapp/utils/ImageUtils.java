@@ -25,7 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
 
-public class ImageUtility {
+public class ImageUtils implements ConstantsUtils {
 
     /**
      * to convert Selected image uri to Bitmap
@@ -50,15 +50,15 @@ public class ImageUtility {
 
             int width = options.outWidth;
             int height = options.outHeight;
-            int scale = ProductUtility.ONE;
+            int scale = ONE;
 
             while (true) {
-                if (width / ProductUtility.TWO < REQUIRED_SIZE || height / ProductUtility.TWO < REQUIRED_SIZE) {
+                if (width / TWO < REQUIRED_SIZE || height / TWO < REQUIRED_SIZE) {
                     break;
                 }
-                width /= ProductUtility.TWO;
-                height /= ProductUtility.TWO;
-                scale *= ProductUtility.TWO;
+                width /= TWO;
+                height /= TWO;
+                scale *= TWO;
             }
             BitmapFactory.Options options2 = new BitmapFactory.Options();
             options2.inSampleSize = scale;
@@ -79,7 +79,7 @@ public class ImageUtility {
     public static byte[] bitmapToBytes(Bitmap bitmap) {
         if (bitmap == null) return null;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, ProductUtility.ZERO, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, ProductUtils.ZERO, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
@@ -91,41 +91,9 @@ public class ImageUtility {
      */
     public static Bitmap byteArrayToBitmap(byte[] imageByteArray) {
         if (imageByteArray == null) return null;
-        return BitmapFactory.decodeByteArray(imageByteArray, ProductUtility.ZERO, imageByteArray.length);
+        return BitmapFactory.decodeByteArray(imageByteArray, ProductUtils.ZERO, imageByteArray.length);
     }
 
-    /**
-     * to convert image resource id to bitmap
-     *
-     * @param context    of the activity
-     * @param idResource of the image wanted to be converted
-     * @return bitmap
-     */
-    private static Bitmap intIdResourceToBitmap(Context context, int idResource) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        return BitmapFactory.decodeResource(context.getResources(), idResource, options);
-    }
 
-    /**
-     * one method to convert @param imageResourceId to byte[] directly
-     *
-     * @param context         of the activity
-     * @param imageResourceId wanted to be converted
-     * @return byte[]
-     */
-    public static byte[] intResourceIdToByteArray(Context context, int imageResourceId) {
-        return bitmapToBytes(intIdResourceToBitmap(context, imageResourceId));
-    }
 
-    /**
-     * one method to convert @param selectedImageUri to byte[] directly
-     *
-     * @param context          of the activity
-     * @param selectedImageUri wanted to be converted
-     * @param REQUIRED_SIZE    wanted image size
-     * @return byte[]
-     */
-    public static byte[] uriToByteArray(Context context, Uri selectedImageUri, int REQUIRED_SIZE) {
-        return bitmapToBytes(uriToBitmap(context, selectedImageUri, REQUIRED_SIZE));
-    }
 }

@@ -17,7 +17,7 @@ limitations under the License.
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.tarek.inventoreyapp.views.CatalogActivity">
+    tools:context="com.example.tarek.inventoreyapp.views.EditorActivity">
 
     <item
         android:id="@+id/action_save"
@@ -31,8 +31,16 @@ limitations under the License.
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_share_product"
+        android:icon="@android:drawable/ic_menu_share"
+        android:title="@string/share_product"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_insert_dummy_data"
         android:title="@string/action_fill_fields_with_dummy_data"
-        app:showAsAction="never" />
+        android:icon="@android:drawable/ic_menu_agenda"
+        app:showAsAction="ifRoom|withText" />
+
 
 </menu>

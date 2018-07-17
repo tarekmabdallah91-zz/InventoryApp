@@ -17,23 +17,27 @@ limitations under the License.
 <resources>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="padding_margin_value">4dp</dimen>
-    <dimen name="padding_margin_value2">10dp</dimen>
+    <dimen name="padding_margin_value_4spaces">4dp</dimen>
+    <dimen name="padding_margin_value_8spaces">8dp</dimen>
 
     <dimen name="name_text_size">20sp</dimen>
     <dimen name="code_text_size">18sp</dimen>
-    <dimen name="id_text_size">10sp</dimen>
-    <dimen name="price_text_size">14sp</dimen>
-    <dimen name="quantity_text_size">12sp</dimen>
+    <dimen name="id_text_size">12sp</dimen>
+    <dimen name="price_text_size">16sp</dimen>
+    <dimen name="quantity_text_size">16sp</dimen>
 
-    <dimen name="default_texts_size">16sp</dimen>
-    <dimen name="summary_text_size">14sp</dimen>
-    <dimen name="msg_texts_size">12sp</dimen>
+    <dimen name="default_texts_size">18sp</dimen>
+    <dimen name="msg_texts_size">14sp</dimen>
 
     <dimen name="item_image_size">70dp</dimen>
 
-    <dimen name="list_divider_height">8dp</dimen>
-
     <dimen name="edit_text_width">250dp</dimen>
     <dimen name="description_edit_text_height">120dp</dimen>
+
+    <dimen name="items_icons_size">24dp</dimen>
+
+    <!-- 120 = 16 margin_bottom fab + 48 height fab + 16 margin_top fab + 40 for piece of last item on recycler view -->
+    <dimen name="padding_bottom_recycler_view">120dp</dimen>
+    <dimen name="fab_size">48dp</dimen>
+
 </resources>
