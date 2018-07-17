@@ -22,8 +22,8 @@ limitations under the License.
     <string name="add_product">Add new product</string>
     <string name="catalog_label">[ %d ] items result of</string>
     <string name="empty_text_msg">Sorry, There is no any data to show\nplease add some products to the Database</string>
-    <string name="no_data_for_input_value_msg">Sorry, There is no any data\nrelated to the entered
-        value\nplease try again\nor choose another option to retrieve data\nrather than default as it will not retrieve any data</string>
+    <string name="no_data_for_input_value_msg">Sorry, There is no any data\nrelated to this page
+        \nplease try again\nor choose another option to retrieve data\nor add some data to this page</string>
     <string name="put_value_text_msg">Please, Enter a value then click show button\nto display the
         data\nor choose other choice to display the data</string>
 

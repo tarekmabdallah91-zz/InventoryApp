@@ -185,7 +185,6 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
             }
         }).attachToRecyclerView(frg_recycler_view);
     }
-
     @Override
     public void onResume() {
         super.onResume();
