@@ -780,7 +780,8 @@ public class EditorActivity extends AppCompatActivity
 
     @OnClick(R.id.quantity_down_icon)
     void onClickArrowDownIcon() {
-        productQuantity.setText(String.valueOf(productUtils.refuseNegativeNumbers(--quantity)));
+        if (ZERO != quantity)
+            productQuantity.setText(String.valueOf(productUtils.refuseNegativeNumbers(--quantity)));
     }
 
     @OnClick(R.id.quantity_up_icon)

@@ -153,6 +153,7 @@ public class ProductCursorLoader extends AsyncTaskLoader<Cursor> implements Cons
             }
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
+            return null;
         }
         return contentResolver.query(ProductEntry.CONTENT_URI,
                 projection, selection, selectionArgs, sortOrder);

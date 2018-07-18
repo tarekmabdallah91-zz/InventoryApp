@@ -68,7 +68,7 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
     @BindView(R.id.frg_fab)
     FloatingActionButton fab;
     @BindString(R.string.empty_text_msg)
-    String noData_msg;
+    String noDataMsg;
     @BindString(R.string.count_msg)
     String countMsg;
     @BindString(R.string.sort_or_search_key)
@@ -178,10 +178,11 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
         cursor = new ProductCursorLoader(context, contentResolver, bundle).loadInBackground();
 
         if (null == cursor) {
-            showData(BOOLEAN_FALSE, noData_msg);
+            showData(BOOLEAN_FALSE, noDataMsg);
             frg_tv_count_msg.setVisibility(View.GONE);
         } else if (cursor.getCount() <= ZERO) {
             showData(BOOLEAN_FALSE, noDataForInputValue);
+            frg_tv_count_msg.setVisibility(View.GONE);
         } else {
             productRecyclerAdapter.swapCursor(cursor);
             String msg = String.format(countMsg, cursor.getCount());

@@ -37,6 +37,9 @@ limitations under the License.
 
     <dimen name="items_icons_size">24dp</dimen>
 
+    <dimen name="empty_msg_icons_width">200dp</dimen>
+    <dimen name="empty_msg_icons_height">300dp</dimen>
+
     <!-- as the quantity text size -->
 
     <!-- 120 = 16 margin_bottom fab + 48 height fab + 16 margin_top fab + 40 for piece of last item on recycler view -->
