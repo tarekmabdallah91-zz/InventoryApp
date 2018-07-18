@@ -21,7 +21,7 @@ limitations under the License.
 
     <PreferenceCategory android:title="@string/title_preference_category_un_synced_products">
         <ListPreference
-            android:defaultValue="@string/value_sort_or_search_default_value"
+            android:defaultValue="@string/value_order_by"
             android:entries="@array/order_or_search_entries_keys"
             android:entryValues="@array/order_or_search_values"
             android:key="@string/sort_or_search_key"

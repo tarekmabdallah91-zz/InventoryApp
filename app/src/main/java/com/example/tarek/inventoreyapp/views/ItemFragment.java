@@ -179,6 +179,7 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
 
         if (null == cursor) {
             showData(BOOLEAN_FALSE, noData_msg);
+            frg_tv_count_msg.setVisibility(View.GONE);
         } else if (cursor.getCount() <= ZERO) {
             showData(BOOLEAN_FALSE, noDataForInputValue);
         } else {

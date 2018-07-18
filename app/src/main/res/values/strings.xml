@@ -102,7 +102,7 @@ limitations under the License.
     <string name="key_search_for_category">Search for Category</string>
     <string name="key_search_for_code">Search for Code</string>
 
-    <string name="value_sort_or_search_default_value" translatable="false">none</string>
+
     <string name="value_order_by" translatable="false">order by</string>
     <string name="value_search_for_name" translatable="false">search for Name</string>
     <string name="value_search_for_category" translatable="false">search for Category</string>
