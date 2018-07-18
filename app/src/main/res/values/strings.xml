@@ -136,7 +136,7 @@ limitations under the License.
 
 
     <string name="description_error_image_view_fragment_item">description_error_image_view_fragment_item</string>
-    <string name="title_preference_category_un_synced_products">UnSynced Products</string>
+    <string name="title_preference_category_un_synced_products">Preferences</string>
     <string name="tag_Icons_off">off</string>
     <string name="tag_Icons_on">on</string>
     <string name="item_image_description">item_image_description</string>

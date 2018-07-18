@@ -8,6 +8,7 @@ import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
@@ -46,11 +47,17 @@ public class ProductPreferences extends PreferenceFragmentCompat
         int count = preferenceScreen.getPreferenceCount();
         for (int i = ZERO; i < count; i++) {
             Preference preference = preferenceScreen.getPreference(i);
-            if (!(preference instanceof CheckBoxPreference)) {
-                String key = preference.getKey();
-                String value = sharedPreferences.getString(key, EMPTY_STRING);
-                //Log.d(TAG, i + " - " + value);
-                setPreferenceSummary(preference, value);
+            if (preference instanceof PreferenceCategory) {
+                PreferenceCategory preferenceCategory = (PreferenceCategory) preference;
+                int countCategory = preferenceCategory.getPreferenceCount();
+                for (int k = ZERO; k < countCategory; k++) {
+                    Preference preference1 = preferenceCategory.getPreference(k);
+                    if (!(preference1 instanceof CheckBoxPreference)) {
+                        String key = preference.getKey();
+                        String value = sharedPreferences.getString(key, EMPTY_STRING);
+                        setPreferenceSummary(preference, value);
+                    }
+                }
             }
         }
         // to validate the input values immediately setOnPreferenceChangeListener for the EditText

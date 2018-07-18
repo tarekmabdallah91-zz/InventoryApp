@@ -42,7 +42,7 @@ limitations under the License.
     <TextView
         android:id="@+id/frg_tv_error_msg"
         style="@style/error_msg_text_views_style"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/padding_margin_value_8spaces"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/frg_recycler_view"

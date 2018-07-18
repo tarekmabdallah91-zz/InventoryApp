@@ -77,6 +77,8 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
     String SORT_OR_SEARCH_DEFAULT_VALUE;
     @BindString(R.string.order_key)
     String ORDER_KEY;
+    @BindString(R.string.key_order_by)
+    String ORDER_BY;
     @BindString(R.string.value_order_by_id)
     String ORDER_DEFAULT_VALUE;
     @BindString(R.string.search_key)
@@ -227,11 +229,8 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
     private void showData(boolean value, String text) {
         // showed text in count text view
         String msg = sortOrSearchValue + WHITE_SPACE;
-        if (SORT_OR_SEARCH_DEFAULT_VALUE.equals(sortOrSearchValue)) { //  sortOrSearchValue = order by
-            msg += orderByValue;
-        } else {
-            msg += EQUAL + WHITE_SPACE + inputText;
-        }
+        msg += EQUAL + WHITE_SPACE + inputText + WHITE_SPACE + ORDER_BY + WHITE_SPACE + orderByValue;
+
         if (value) {
             msg = text + WHITE_SPACE + msg;
             frg_iv_error_image.setVisibility(View.GONE);
