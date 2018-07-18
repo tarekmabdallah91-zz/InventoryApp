@@ -31,8 +31,6 @@ public class ProductPreferences extends PreferenceFragmentCompat
 
         SORT_OR_SEARCH_KEY = getString(R.string.sort_or_search_key);
         SORT_OR_SEARCH_DEFAULT_VALUE = getString(R.string.value_order_by);
-        String ORDER_KEY = getString(R.string.order_key);
-        String ORDER_DEFAULT_VALUE = getString(R.string.value_order_by);
         SEARCH_KEY = getString(R.string.search_key);
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
