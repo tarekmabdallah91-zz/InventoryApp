@@ -148,12 +148,18 @@ limitations under the License.
         <EditText
             android:id="@+id/input_quantity"
             style="@style/edit_text_style"
-            android:hint="@string/product_quantity"
+            android:layout_width="wrap_content"
+            android:clickable="false"
+            android:enabled="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:hint="@string/shopping_car_counter"
+            android:text="@string/shopping_car_counter"
+            android:textIsSelectable="false"
             android:inputType="number"
-            android:maxLength="@integer/quantity_max_length"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/item_quantity_label" />
+            app:layout_constraintBottom_toBottomOf="@+id/item_quantity_label"
+            app:layout_constraintEnd_toStartOf="@+id/quantity_up_icon"
+            app:layout_constraintTop_toTopOf="@+id/item_quantity_label" />
 
         <TextView
             android:id="@+id/error_msg_quantity"
@@ -287,6 +293,41 @@ limitations under the License.
             android:layout_marginRight="@dimen/padding_margin_value_8spaces"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/quantity_down_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/item_arrow_down_description"
+            android:src="@drawable/ic_long_arrow_pointing_down_24"
+            app:layout_constraintBottom_toTopOf="@+id/error_msg_quantity"
+            app:layout_constraintEnd_toStartOf="@+id/input_quantity"
+            app:layout_constraintTop_toTopOf="@+id/input_quantity" />
+
+        <ImageView
+            android:id="@+id/quantity_up_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_margin_value_24spaces"
+            android:layout_marginRight="@dimen/padding_margin_value_24spaces"
+            android:contentDescription="@string/item_arrow_up_description"
+            android:src="@drawable/ic_long_arrow_pointing_up_24"
+            app:layout_constraintBottom_toTopOf="@+id/error_msg_quantity"
+            app:layout_constraintEnd_toEndOf="@+id/item_quantity_label"
+            app:layout_constraintTop_toTopOf="@+id/input_quantity" />
+
+        <ImageView
+            android:id="@+id/phone_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_margin_value_8spaces"
+            android:layout_marginRight="@dimen/padding_margin_value_8spaces"
+            android:contentDescription="@string/call_icon_description"
+            android:tint="@color/icons_color"
+            app:layout_constraintBottom_toTopOf="@+id/error_msg_supplier_phone"
+            app:layout_constraintEnd_toStartOf="@+id/input_supplier_phone"
+            app:layout_constraintTop_toTopOf="@+id/input_supplier_phone"
+            app:srcCompat="@android:drawable/stat_sys_phone_call" />
 
     </android.support.constraint.ConstraintLayout>
 

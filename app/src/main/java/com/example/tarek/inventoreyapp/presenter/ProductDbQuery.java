@@ -31,7 +31,6 @@ import com.example.tarek.inventoreyapp.utils.ProductUtils;
 public class ProductDbQuery {
 
     private final Context context;
-    // --Commented out by Inspection (18/05/2018 01:37 ص):private static final String LOG_TAG = ProductDbQuery.class.getSimpleName();
     private final ProductUtils productUtils;
 
     public ProductDbQuery(Context context) {
@@ -189,17 +188,6 @@ public class ProductDbQuery {
         Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
         return context.getContentResolver().update(uri, values, selection, new String[]{String.valueOf(id)});
     }
-
-// --Commented out by Inspection START (17/07/2018 02:20 ص):
-//    /**
-//     * method to delete all data
-//     *
-//     * @return number of deleted rows
-//     */
-//    public int deleteAll() {
-//        return context.getContentResolver().delete(ProductEntry.CONTENT_URI, null, null);
-//    }
-// --Commented out by Inspection STOP (17/07/2018 02:20 ص)
 
     /**
      * method to delete  row by id

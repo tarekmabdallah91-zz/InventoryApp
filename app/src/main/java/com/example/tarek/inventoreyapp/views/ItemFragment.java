@@ -33,7 +33,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,9 +57,6 @@ import butterknife.OnClick;
 public class ItemFragment extends Fragment implements ConstantsUtils,
         SharedPreferences.OnSharedPreferenceChangeListener, ProductRecyclerAdapter.ProductItemOnClickListener {
 
-    private final String TAG = ItemFragment.class.getSimpleName();
-    private final Boolean BOOLEAN_TRUE = true;
-    private final Boolean BOOLEAN_FALSE = false;
     @BindView(R.id.frg_recycler_view)
     RecyclerView frg_recycler_view;
     @BindView(R.id.frg_tv_count_msg)
@@ -87,12 +83,8 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
     String SEARCH_KEY;
     @BindString(R.string.invalid_input_user_catalog_activity)
     String invalidInput;
-    @BindString(R.string.error_text)
-    String invalidName;
     @BindString(R.string.empty_text_msg)
     String emptyTextMsg;
-    @BindString(R.string.catalog_label)
-    String catalogLabel;
     @BindString(R.string.put_value_text_msg)
     String putValueMsg;
     @BindString(R.string.no_data_for_input_value_msg)
@@ -112,8 +104,10 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
     private String inputText;
 
     private int fragmentItemPosition;
-    private ProductRecyclerAdapter productRecyclerAdapter;
+    private final Boolean BOOLEAN_TRUE = true;
+    private final Boolean BOOLEAN_FALSE = false;
 
+    private ProductRecyclerAdapter productRecyclerAdapter;
     private Context context;
     private ContentResolver contentResolver;
     private Cursor cursor;
@@ -124,7 +118,6 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(BOOLEAN_TRUE); // to support OptionsMenu
         // run before onCreateView - onActivityCreated - onStart ..
-        //Log.d(TAG , " onCreate ");
     }
 
     @Nullable
@@ -132,37 +125,28 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = getLayoutInflater().inflate(R.layout.fragment_item, container, BOOLEAN_FALSE);
         ButterKnife.bind(this, root);
-        //Log.d(TAG , " onCreateView ");
         return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //Log.d(TAG , " onActivityCreated ");
         context = getContext();
         contentResolver = null != context ? context.getContentResolver() : null;
 
         if (null != savedInstanceState) {
             bundle = savedInstanceState.getBundle(BUNDLE);
-            //Log.d(TAG , " onActivityCreated - bundle not null " + bundle);
         } else {
             bundle = new Bundle();
             bundle.putInt(FRAGMENT_ITEM_POSITION, fragmentItemPosition);
         }
-
-        //Log.d(TAG , " onActivityCreated - bundle " + bundle);
-
         PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Log.d(TAG , " onSavedInstanceState") ;
         outState.putBundle(BUNDLE, bundle);
-        //Log.d(TAG , " onSaveInstanceState - bundle " + bundle);
-
     }
 
     private void runCode() {
@@ -170,7 +154,49 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
         getSharedPreferenceWhenStartActivity();
         getAppropriateCursor(bundle, QUERY);
         setRecyclerView();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        runCode();
+    }
 
+    private void getSharedPreferenceWhenStartActivity() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sortOrSearchValue = sharedPreferences.getString(SORT_OR_SEARCH_KEY, SORT_OR_SEARCH_DEFAULT_VALUE);
+        bundle.putString(SORT_OR_SEARCH_PREFERENCE_KEY, sortOrSearchValue);
+        // get the selected  ORDER_BY value to complete the query correctly
+        orderByValue = sharedPreferences.getString(ORDER_KEY, ORDER_DEFAULT_VALUE);
+        bundle.putString(ORDER_BY_PREFERENCE_KEY, orderByValue);
+        // get the selected  ORDER_BY value to complete the query correctly
+        inputText = sharedPreferences.getString(SEARCH_KEY, EMPTY_STRING);
+        bundle.putString(SEARCHED_INPUT_TEXT_PREFERENCE_KEY, inputText);
+    }
+
+    private void getAppropriateCursor(Bundle bundle, String mode) {
+        bundle.putString(MODE, mode);
+        cursor = new ProductCursorLoader(context, contentResolver, bundle).loadInBackground();
+
+        if (null == cursor) {
+            showData(BOOLEAN_FALSE, noData_msg);
+        } else if (cursor.getCount() <= ZERO) {
+            showData(BOOLEAN_FALSE, noDataForInputValue);
+        } else {
+            productRecyclerAdapter.swapCursor(cursor);
+            String msg = String.format(countMsg, cursor.getCount());
+            showData(BOOLEAN_TRUE, msg);
+        }
+    }
+
+    private void setRecyclerAdapter() {
+        productRecyclerAdapter = new ProductRecyclerAdapter(this);
+        productRecyclerAdapter.notifyDataSetChanged();
+    }
+
+    private void setRecyclerView() {
+        frg_recycler_view.setHasFixedSize(BOOLEAN_TRUE);
+        frg_recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));
+        frg_recycler_view.setAdapter(productRecyclerAdapter);
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ZERO, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -184,55 +210,7 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
                 getAppropriateCursor(bundle, id + DELETE_ITEM);
             }
         }).attachToRecyclerView(frg_recycler_view);
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        //Log.d(TAG , " onResume") ;
-        runCode();
-    }
 
-    private void getSharedPreferenceWhenStartActivity() {
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        sortOrSearchValue = sharedPreferences.getString(SORT_OR_SEARCH_KEY, SORT_OR_SEARCH_DEFAULT_VALUE);
-        bundle.putString(SORT_OR_SEARCH_PREFERENCE_KEY, sortOrSearchValue);
-        // get the selected  ORDER_BY value to complete the query correctly
-        orderByValue = sharedPreferences.getString(ORDER_KEY, ORDER_DEFAULT_VALUE);
-        bundle.putString(ORDER_BY_PREFERENCE_KEY, orderByValue);
-        // get the selected  ORDER_BY value to complete the query correctly
-        inputText = sharedPreferences.getString(SEARCH_KEY, EMPTY_STRING);
-        bundle.putString(SEARCHED_INPUT_TEXT_PREFERENCE_KEY, inputText);
-    }
-
-    private void getAppropriateCursor(Bundle bundle, String mode) {
-        //bundle.putInt(FRAGMENT_ITEM_POSITION, fragmentItemPosition);
-        bundle.putString(MODE, mode);
-        Log.d(TAG, " getAppropriateCursor - bundle " + bundle);
-        cursor = new ProductCursorLoader(context, contentResolver, bundle).loadInBackground();
-
-        if (null == cursor) {
-            showData(BOOLEAN_FALSE, noData_msg);
-        } else if (cursor.getCount() <= ZERO) {
-            showData(BOOLEAN_FALSE, noDataForInputValue);
-        } else {
-            productRecyclerAdapter.swapCursor(cursor);
-            String msg = String.format(countMsg, cursor.getCount());
-            showData(BOOLEAN_TRUE, msg);
-        }
-
-    }
-
-    private void setRecyclerAdapter() {
-        productRecyclerAdapter = new ProductRecyclerAdapter(this);
-        productRecyclerAdapter.notifyDataSetChanged();
-    }
-
-    private void setRecyclerView() {
-        frg_recycler_view.setHasFixedSize(BOOLEAN_TRUE);
-        frg_recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));
-        frg_recycler_view.setAdapter(productRecyclerAdapter);
     }
 
     @OnClick(R.id.frg_fab)
@@ -242,32 +220,31 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
 
     public void setFragmentItemPosition(int position) {
         this.fragmentItemPosition = position;
-        Log.d(TAG, String.valueOf(position));
     }
 
     private void showData(boolean value, String text) {
-
+        // showed text in count text view
+        String msg = sortOrSearchValue + WHITE_SPACE;
+        if (SORT_OR_SEARCH_DEFAULT_VALUE.equals(sortOrSearchValue)) { //  sortOrSearchValue = order by
+            msg += orderByValue;
+        } else {
+            msg += EQUAL + WHITE_SPACE + inputText;
+        }
         if (value) {
+            msg = text + WHITE_SPACE + msg;
             frg_iv_error_image.setVisibility(View.GONE);
             frg_tv_error_msg.setVisibility(View.GONE);
-
-            String msg = text + WHITE_SPACE + sortOrSearchValue + WHITE_SPACE;
-            if (SORT_OR_SEARCH_DEFAULT_VALUE.equals(sortOrSearchValue)) { //  sortOrSearchValue = order by
-                msg += orderByValue;
-            } else {
-                msg += inputText;
-            }
-            frg_tv_count_msg.setText(msg);
-            frg_tv_count_msg.setVisibility(View.VISIBLE);
             frg_recycler_view.setVisibility(View.VISIBLE);
-
+            frg_tv_count_msg.setTextColor(context.getResources().getColor(R.color.default_text_color));
         } else {
-            frg_tv_count_msg.setVisibility(View.GONE);
             frg_recycler_view.setVisibility(View.GONE);
             frg_tv_error_msg.setText(text);
             frg_iv_error_image.setVisibility(View.VISIBLE);
             frg_tv_error_msg.setVisibility(View.VISIBLE);
+            frg_tv_count_msg.setTextColor(context.getResources().getColor(R.color.error_msg_text_color));
         }
+
+        frg_tv_count_msg.setText(msg);
     }
 
     @Override
@@ -288,6 +265,9 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(context, SettingActivity.class));
+                break;
+            case R.id.action_reload_data:
+                reloadData();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -337,22 +317,18 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        //Log.d(TAG , " KEY : "+ key);
         if (SORT_OR_SEARCH_KEY.equals(key)) {
             // get the selected value to decide which the second choice to complete the query correctly
             sortOrSearchValue = sharedPreferences.getString(SORT_OR_SEARCH_KEY, SORT_OR_SEARCH_DEFAULT_VALUE);
             bundle.putString(SORT_OR_SEARCH_PREFERENCE_KEY, sortOrSearchValue);
-            //Log.d(TAG , " sortOrSearchValue: "+sortOrSearchValue);
         } else if (ORDER_KEY.equals(key)) {
             // get the selected  ORDER_BY value to complete the query correctly
             orderByValue = sharedPreferences.getString(ORDER_KEY, ORDER_DEFAULT_VALUE);
             bundle.putString(ORDER_BY_PREFERENCE_KEY, orderByValue);
-            //Log.d(TAG , " orderByValue: "+orderByValue);
         } else if (SEARCH_KEY.equals(key)) {
             // get the selected  ORDER_BY value to complete the query correctly
             inputText = sharedPreferences.getString(SEARCH_KEY, ProductUtils.EMPTY_STRING);
             bundle.putString(SEARCHED_INPUT_TEXT_PREFERENCE_KEY, inputText);
-            // Log.d(TAG , " inputText: "+inputText);
         }
     }
 
@@ -369,7 +345,6 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
         if (this.isVisible()) {
             // If we are becoming invisible, then...
             if (!isVisibleToUser) {
-                //Log.d(TAG ," not visible now - new page" );
                 closeCursor();
                 setAdapterByNull();
             } else {
@@ -378,6 +353,11 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
                 getAppropriateCursor(bundle, QUERY);
             }
         }
+    }
+
+    private void reloadData() {
+        setAdapterByNull(); // to empty the current recycler
+        getAppropriateCursor(bundle, QUERY); // then reload it again
     }
 
     private void closeCursor() {

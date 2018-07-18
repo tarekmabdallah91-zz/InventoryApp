@@ -16,8 +16,8 @@ limitations under the License.
 <resources>
     <color name="colorPrimary">#a1715f</color>
     <color name="colorPrimaryDark">#5D4037</color>
-    <color name="colorAccent">#5D4037</color>
-    <color name="colorWindowBackGround">#9E9E9E</color>
+    <color name="colorAccent">#fa4208</color>
+    <color name="colorWindowBackGround">#eaeaea</color>
 
     <color name="icons_color">#795548</color>
     <color name="default_text_color">#000000</color>

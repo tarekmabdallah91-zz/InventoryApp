@@ -271,5 +271,10 @@ public class ProductUtils implements ConstantsUtils {
                 (values.containsKey(ProductEntry.COLUMN_PRODUCT_SUPPLIER_PHONE));
     }
 
+    public int refuseNegativeNumbers(int num) {
+        if (num > ZERO) return num;
+        else return ZERO;
+    }
+
 }
 

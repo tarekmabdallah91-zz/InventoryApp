@@ -21,6 +21,8 @@ public interface ConstantsUtils {
     String WHITE_SPACE_REGEX = ".*\\s.*";
     String SPLITTER_REGEX_MINUS = "(-)";
     String MINUS = "-";
+    String PLUS = "+";
+    String EQUAL = "=";
     String EMPTY_STRING = "";
     String WHITE_SPACE = " ";
     String NEW_LINE_STRING = "\n";
@@ -28,7 +30,6 @@ public interface ConstantsUtils {
     String SPLITTER_REGEX_COLUMN_NAME = "(for )";
     String REGEX_TO_GET_INTEGER_ONLY_FROM_STRING = "[\\D]";
 
-    String SEARCH = "search";
     String MORE_THAN = "more than";
     String LESS_THAN = "less than";
     String DESC = " DESC";
@@ -59,6 +60,8 @@ public interface ConstantsUtils {
     String MORE_THAN_SIGN = " >=?";
     String LESS_THAN_SIGN = " <=?";
     String INTENT_TYPE_IMAGE = "image/*";
+    String INTENT_TYPE_TEXT = "text/plain";
+    String INTENT_TYPE_TEL = "tel:";
 
     String DUMMY_PRODUCT_NAME = "product";
     String DUMMY_PRODUCT_CODE = "code";

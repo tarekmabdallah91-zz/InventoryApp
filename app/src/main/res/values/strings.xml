@@ -55,6 +55,7 @@ limitations under the License.
     <string name="action_fill_fields_with_dummy_data">Fill fields with dummy data</string>
     <string name="action_delete_all_items">Delete all items</string>
     <string name="action_delete_last_row">Delete this item</string>
+    <string name="action_reload_data">Reload data</string>
 
     <string name="action_save">Save</string>
 
@@ -140,6 +141,11 @@ limitations under the License.
     <string name="tag_Icons_on">on</string>
     <string name="item_image_description">item_image_description</string>
     <string name="share_product">Share Product</string>
+    <string name="shopping_car_icon_description">shopping_car_icon_description</string>
+    <string name="shopping_car_counter">0</string>
+    <string name="item_arrow_down_description">item_arrow_down_description</string>
+    <string name="item_arrow_up_description">item_arrow_up_description</string>
+    <string name="call_icon_description">call_icon_description</string>
 
 
 </resources>

@@ -27,7 +27,7 @@ import com.example.tarek.inventoreyapp.views.ItemFragment;
 public class FragmentAdapter extends FragmentPagerAdapter {
 
 
-    private final String[] titles;// = new String[]{""all products" , synced" , "not synced" ,"favoured"};
+    private final String[] titles;// {"all products" , synced" , "not synced" ,"favoured"};
 
     public FragmentAdapter(Context context, FragmentManager fm) {
         super(fm);

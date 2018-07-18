@@ -31,6 +31,9 @@ limitations under the License.
         <TextView
             android:id="@+id/item_id"
             style="@style/item_text_style"
+            android:layout_marginLeft="@dimen/padding_margin_value_4spaces"
+            android:layout_marginStart="@dimen/padding_margin_value_4spaces"
+            android:layout_marginTop="@dimen/padding_margin_value_4spaces"
             android:textSize="@dimen/id_text_size"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -40,6 +43,9 @@ limitations under the License.
         <TextView
             android:id="@+id/item_category"
             style="@style/item_text_style"
+            android:layout_marginEnd="@dimen/padding_margin_value_4spaces"
+            android:layout_marginRight="@dimen/padding_margin_value_4spaces"
+            android:layout_marginTop="@dimen/padding_margin_value_4spaces"
             android:textSize="@dimen/quantity_text_size"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -50,36 +56,49 @@ limitations under the License.
             android:id="@+id/item_image"
             android:layout_width="@dimen/item_image_size"
             android:layout_height="@dimen/item_image_size"
+            android:layout_marginBottom="@dimen/padding_margin_value_4spaces"
+            android:layout_marginLeft="@dimen/padding_margin_value_4spaces"
+            android:layout_marginStart="@dimen/padding_margin_value_4spaces"
+            android:layout_marginTop="@dimen/padding_margin_value_4spaces"
+            android:contentDescription="@string/item_image_description"
             app:layout_constraintBottom_toTopOf="@id/item_quantity"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/item_id"
-            android:contentDescription="@string/item_image_description"
-            tools:src="@drawable/icons8_warehouse_64" />
+            tools:src="@drawable/icon_app" />
 
         <!-- item name -->
         <TextView
             android:id="@+id/item_name"
             style="@style/item_text_style"
+            android:layout_marginLeft="@dimen/padding_margin_value_4spaces"
+            android:layout_marginStart="@dimen/padding_margin_value_4spaces"
             android:textSize="@dimen/name_text_size"
             app:layout_constraintBottom_toTopOf="@id/item_code"
             app:layout_constraintLeft_toRightOf="@+id/item_image"
             app:layout_constraintTop_toBottomOf="@id/item_category"
+            app:layout_constraintVertical_chainStyle="spread_inside"
             tools:text="@string/product_name" />
 
         <!-- item code -->
         <TextView
             android:id="@+id/item_code"
             style="@style/item_text_style"
+            android:layout_marginLeft="@dimen/padding_margin_value_4spaces"
+            android:layout_marginStart="@dimen/padding_margin_value_4spaces"
             android:textSize="@dimen/code_text_size"
             app:layout_constraintLeft_toRightOf="@+id/item_image"
             app:layout_constraintTop_toBottomOf="@id/item_name"
+            android:layout_marginTop="@dimen/padding_margin_value_4spaces"
             tools:text="@string/product_code" />
 
         <!-- item quantity -->
         <TextView
             android:id="@+id/item_quantity"
             style="@style/item_text_style"
+            android:layout_marginBottom="@dimen/padding_margin_value_4spaces"
+            android:layout_marginLeft="@dimen/padding_margin_value_4spaces"
             android:textSize="@dimen/quantity_text_size"
+            android:layout_marginStart="@dimen/padding_margin_value_4spaces"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="@string/product_quantity" />
@@ -88,7 +107,10 @@ limitations under the License.
         <TextView
             android:id="@+id/item_price"
             style="@style/item_text_style"
+            android:layout_marginBottom="@dimen/padding_margin_value_4spaces"
+            android:layout_marginEnd="@dimen/padding_margin_value_4spaces"
             android:textSize="@dimen/price_text_size"
+            android:layout_marginRight="@dimen/padding_margin_value_4spaces"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="@string/product_price" />
@@ -97,10 +119,57 @@ limitations under the License.
             layout="@layout/items_icons_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_margin_value_4spaces"
+            android:layout_marginEnd="@dimen/padding_margin_value_4spaces"
+            android:layout_marginRight="@dimen/padding_margin_value_4spaces"
+            android:layout_marginTop="@dimen/padding_margin_value_4spaces"
             app:layout_constraintBottom_toBottomOf="@+id/item_price"
-            app:layout_constraintEnd_toStartOf="@+id/item_price"
-            app:layout_constraintStart_toEndOf="@+id/item_quantity"
+            app:layout_constraintEnd_toEndOf="@+id/item_price"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/item_price" />
+
+        <ImageView
+            android:id="@+id/item_arrow_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/item_arrow_down_description"
+            android:src="@drawable/ic_long_arrow_pointing_down_24"
+            app:layout_constraintBottom_toBottomOf="@+id/item_shopping_cart_icon"
+            app:layout_constraintEnd_toStartOf="@+id/item_shopping_cart_icon"
+            app:layout_constraintTop_toTopOf="@+id/item_shopping_cart_icon" />
+
+        <ImageView
+            android:id="@+id/item_shopping_cart_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_margin_value_24spaces"
+            android:layout_marginRight="@dimen/padding_margin_value_24spaces"
+            android:contentDescription="@string/shopping_car_icon_description"
+            android:src="@drawable/ic_shopping_cart_empty_tool_24"
+            app:layout_constraintBottom_toTopOf="@+id/item_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_category" />
+
+        <TextView
+            android:id="@+id/item_counter_shopping_cart"
+            style="@style/item_text_style"
+            android:layout_marginBottom="@dimen/padding_margin_value_8spaces"
+            android:text="@string/shopping_car_counter"
+            android:textSize="@dimen/quantity_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/item_shopping_cart_icon"
+            app:layout_constraintEnd_toEndOf="@+id/item_shopping_cart_icon"
+            app:layout_constraintStart_toStartOf="@+id/item_shopping_cart_icon"
+            app:layout_constraintTop_toBottomOf="@+id/item_category" />
+
+        <ImageView
+            android:id="@+id/item_arrow_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/item_arrow_up_description"
+            android:src="@drawable/ic_long_arrow_pointing_up_24"
+            app:layout_constraintBottom_toBottomOf="@+id/item_shopping_cart_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/item_shopping_cart_icon" />
 
 
     </android.support.constraint.ConstraintLayout>

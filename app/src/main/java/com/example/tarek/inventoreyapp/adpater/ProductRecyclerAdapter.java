@@ -30,6 +30,7 @@ import com.example.tarek.inventoreyapp.R;
 import com.example.tarek.inventoreyapp.data.ProductContract.ProductEntry;
 import com.example.tarek.inventoreyapp.utils.ConstantsUtils;
 import com.example.tarek.inventoreyapp.utils.ImageUtils;
+import com.example.tarek.inventoreyapp.utils.ProductUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +39,6 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
         implements ConstantsUtils {
 
     private final ProductItemOnClickListener productItemOnClickListener;
-    // --Commented out by Inspection (17/07/2018 02:20 ص):private final String TAG = ProductRecyclerAdapter.class.getSimpleName();
     private Context context;
     private Cursor cursorProducts;
 
@@ -65,7 +65,6 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     @Override
     public int getItemCount() {
         if (null == cursorProducts) return ZERO;
-
         return cursorProducts.getCount();
     }
 
@@ -82,6 +81,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
             textView.setBackgroundColor(context.getResources().getColor(R.color.out_off_stock_color));
         } else {
             textView.setText(String.valueOf(quantity));
+            textView.setBackgroundColor(ZERO);
         }
     }
 
@@ -99,6 +99,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
         } else {
             String productPrice = String.valueOf(price + DUMMY_PRODUCT_PRICE) + DOLLAR_SIGN;
             textView.setText(productPrice);
+            textView.setBackgroundColor(ZERO);
         }
     }
 
@@ -110,7 +111,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
      */
     private void setItemImage(ImageView imageView, byte[] imageBytes) {
         if (imageBytes == null) { // as default icon
-            imageView.setImageResource(R.drawable.icons8_warehouse_64);
+            imageView.setImageResource(R.drawable.icon_app);
         } else {
             imageView.setImageBitmap(ImageUtils.byteArrayToBitmap(imageBytes));
         }
@@ -119,7 +120,6 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     private void setSyncedImage(ImageView imageView, int value) {
         if (value == ONE) {
             imageView.setImageResource(R.drawable.ic_cloud_on);
-            imageView.setColorFilter(context.getResources().getColor(R.color.icons_color));
         } else if (value == ZERO) {
             imageView.setImageResource(R.drawable.ic_cloud_off);
             imageView.setColorFilter(ZERO);
@@ -129,7 +129,6 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     private void setFavouredImage(ImageView imageView, int value) {
         if (value == ONE) {
             imageView.setImageResource(R.drawable.ic_heart_on);
-            imageView.setColorFilter(context.getResources().getColor(R.color.icons_color));
         } else if (value == ZERO) {
             imageView.setImageResource(R.drawable.ic_heart_off);
             imageView.setColorFilter(ZERO);
@@ -199,18 +198,54 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
         ImageView productSyncedIcon;
         @BindView(R.id.item_favoured_icon)
         ImageView productFavouredIcon;
+        private final ProductUtils productUtils;
+        @BindView(R.id.item_arrow_up)
+        ImageView arrowUp;
+        @BindView(R.id.item_arrow_down)
+        ImageView arrowDown;
+        @BindView(R.id.item_counter_shopping_cart)
+        TextView counterSale;
+        // the two Integers must be declared to deal as apart of the itemView and change in each item individually.
+        private int saleItems;
+        private int quantity;
 
         private ProductViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
+            productUtils = new ProductUtils();
+            arrowDown.setOnClickListener(this);
+            arrowUp.setOnClickListener(this);
+            saleItems = ZERO;
+        }
+
+        private void setCounterSale(String sign) {
+            quantity = Integer.parseInt(productQuantity.getText().toString());
+            if (PLUS.equals(sign)) {
+                productQuantity.setText(String.valueOf(productUtils.refuseNegativeNumbers(--quantity)));
+                if (ZERO != quantity) counterSale.setText(String.valueOf(++saleItems));
+            } else {
+                if (ZERO != saleItems) {
+                    productQuantity.setText(String.valueOf(++quantity));
+                    counterSale.setText(String.valueOf(productUtils.refuseNegativeNumbers(--saleItems)));
+                }
+            }
         }
 
         @Override
         public void onClick(View v) {
-            int id = (int) v.getTag();
-            //Log.d(TAG , " view id = " +id);
-            productItemOnClickListener.onClick(id);
+            int id = v.getId();
+            switch (id) {
+                case R.id.item_arrow_up:
+                    setCounterSale(PLUS);
+                    break;
+                case R.id.item_arrow_down:
+                    setCounterSale(MINUS);
+                    break;
+                default:
+                    int tag = (int) v.getTag();
+                    productItemOnClickListener.onClick(tag);
+            }
         }
     }
 }

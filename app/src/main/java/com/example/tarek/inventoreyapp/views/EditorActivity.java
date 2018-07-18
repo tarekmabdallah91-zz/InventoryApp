@@ -42,6 +42,7 @@ import android.widget.TextView;
 import com.example.tarek.inventoreyapp.R;
 import com.example.tarek.inventoreyapp.data.ProductContract.ProductEntry;
 import com.example.tarek.inventoreyapp.presenter.ProductDbQuery;
+import com.example.tarek.inventoreyapp.utils.ConstantsUtils;
 import com.example.tarek.inventoreyapp.utils.ImageUtils;
 import com.example.tarek.inventoreyapp.utils.ProductUtils;
 
@@ -53,7 +54,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class EditorActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor>, ConstantsUtils {
 
     @BindView(R.id.error_msg_name)
     TextView productNameMsg;
@@ -98,6 +100,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     ImageView syncedIcon;
     @BindView(R.id.item_favoured_icon)
     ImageView favouredIcon;
+    private final int ONE = 1;
+    private final int TWO = 2;
+    private final int THREE = 3;
 
     @BindString(R.string.details_product)
     String detailsProduct;
@@ -153,30 +158,42 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private boolean productTouched;
     private MenuItem saveOrEdit;
     private MenuItem deleteThisItem;
+    @BindView(R.id.quantity_up_icon)
+    ImageView arrowUpIcon;
     private MenuItem fillWithDummyData;
     private String mode;
-    // --Commented out by Inspection (17/07/2018 02:20 ص):private final String TAG = EditorActivity.class.getSimpleName();
+    @BindView(R.id.quantity_down_icon)
+    ImageView arrowDownIcon;
+    @BindView(R.id.phone_icon)
+    ImageView phoneIcon;
+    private MenuItem shareMenuItem;
+    private int quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         ButterKnife.bind(this);
-
         initiateValues();
         setOnTouchListenerForEditTextViews();
+
     }
 
     /**
      * to initiate variables
      */
     private void initiateValues() {
+        setQuantity(productUtils.ZERO);
         bitmapImage1 = null;
         bitmapImage2 = null;
         bitmapImage3 = null;
         productDbQuery = new ProductDbQuery(this);
         productUtils = new ProductUtils();
         values = new ContentValues();
+    }
+
+    private void setQuantity(int num) {
+        quantity = num;
     }
 
     /**
@@ -196,6 +213,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         productImage2.setOnTouchListener(changeTagToTrueIfClicked());
         productImage3.setOnTouchListener(changeTagToTrueIfClicked());
         favouredIcon.setOnTouchListener(changeTagToTrueIfClicked());
+        arrowDownIcon.setOnTouchListener(changeTagToTrueIfClicked());
+        arrowUpIcon.setOnTouchListener(changeTagToTrueIfClicked());
     }
 
     /**
@@ -253,8 +272,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 public void onClick(DialogInterface dialog, int which) {
                     ContentValues enteredValues = getEnteredData();
                     int done = productDbQuery.update(enteredValues,
-                            ProductEntry._ID + productUtils.SIGN_ID, updatingId);
-                    if (done != productUtils.INVALID) {
+                            ProductEntry._ID + SIGN_ID, updatingId);
+                    if (done != INVALID) {
                         restartLoaderOnQueryBundleChange(); // to update in background thread
                     }
                 }
@@ -304,7 +323,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 // initiate loader here because of the order of initiating method here is :
                 // onCreate then >> onPrepareOptionsMenu and I want to initiate the loader after getting the
                 // intent and setting the mode
-                getLoaderManager().initLoader(ProductUtils.ZERO, null, this);
+                getLoaderManager().initLoader(ZERO, null, this);
             }
         } else { // insert mode // if there isn't extra with this Key name it will set lastId = ZERO
             setMode(addProduct);
@@ -335,15 +354,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private void setMode(String modeResourceId) {
         if (modeResourceId.equals(detailsProduct)) {
-            setViewsAsMode(detailsProduct, R.drawable.icons8_edit_96, false, false);
+            setViewsAsMode(detailsProduct, android.R.drawable.ic_menu_edit, false, false);
         } else if (modeResourceId.equals(updateProduct)) {
-            setViewsAsMode(updateProduct, R.drawable.icons8_checkmark_96_2, true, false);
+            setViewsAsMode(updateProduct, android.R.drawable.ic_menu_save, true, false);
             productImage1.setVisibility(View.VISIBLE);
             productImage2.setVisibility(View.VISIBLE);
             productImage3.setVisibility(View.VISIBLE);
         } else { // add new product
-            setViewsAsMode(addProduct, R.drawable.icons8_checkmark_96_2, true, true);
+            setViewsAsMode(addProduct, android.R.drawable.ic_menu_save, true, true);
             deleteThisItem.setVisible(false);
+            shareMenuItem.setVisible(false);
         }
     }
 
@@ -363,6 +383,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         productImage2.setEnabled(enable);
         productImage3.setEnabled(enable);
         favouredIcon.setEnabled(enable);
+        arrowDownIcon.setEnabled(enable);
+        arrowUpIcon.setEnabled(enable);
     }
 
     /**
@@ -379,6 +401,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         saveOrEdit = menu.findItem(R.id.action_save);
         deleteThisItem = menu.findItem(R.id.action_delete_this_item);
         fillWithDummyData = menu.findItem(R.id.action_insert_dummy_data);
+        shareMenuItem = menu.findItem(R.id.action_share_product);
         getComingIntents();
         return super.onPrepareOptionsMenu(menu);
     }
@@ -396,7 +419,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.action_share_product:
                 shareProductDetails();
                 break;
-            case R.id.action_save: // R.id.action_save:
+            case R.id.action_save:
                 if (mode.equals(detailsProduct)) {
                     // if the mode was details mode then change it to updating mode
                     setMode(updateProduct);
@@ -429,26 +452,25 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void shareProductDetails() {
-        final String type = "text/plain";
-        final String titleMsg = getTitle() + productUtils.WHITE_SPACE + updatingId;
+        final String titleMsg = getTitle() + WHITE_SPACE + updatingId;
         final String msg =
-                ProductEntry.COLUMN_PRODUCT_NAME + productUtils.WHITE_SPACE +
-                        productName.getText().toString() + productUtils.NEW_LINE_STRING +
-                        ProductEntry.COLUMN_PRODUCT_CODE + productUtils.WHITE_SPACE +
-                        productCode.getText().toString() + productUtils.NEW_LINE_STRING +
-                        ProductEntry.COLUMN_PRODUCT_CATEGORY + productUtils.WHITE_SPACE +
-                        productCategory.getText().toString() + productUtils.NEW_LINE_STRING +
-                        ProductEntry.COLUMN_PRODUCT_PRICE + productUtils.WHITE_SPACE +
-                        productPrice.getText().toString() + productUtils.NEW_LINE_STRING +
-                        ProductEntry.COLUMN_PRODUCT_QUANTITY + productUtils.WHITE_SPACE +
-                        productQuantity.getText().toString() + productUtils.NEW_LINE_STRING +
-                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + productUtils.WHITE_SPACE +
-                        productSupplierName.getText().toString() + productUtils.NEW_LINE_STRING +
-                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_PHONE + productUtils.WHITE_SPACE +
+                ProductEntry.COLUMN_PRODUCT_NAME + WHITE_SPACE +
+                        productName.getText().toString() + NEW_LINE_STRING +
+                        ProductEntry.COLUMN_PRODUCT_CODE + WHITE_SPACE +
+                        productCode.getText().toString() + NEW_LINE_STRING +
+                        ProductEntry.COLUMN_PRODUCT_CATEGORY + WHITE_SPACE +
+                        productCategory.getText().toString() + NEW_LINE_STRING +
+                        ProductEntry.COLUMN_PRODUCT_PRICE + WHITE_SPACE +
+                        productPrice.getText().toString() + NEW_LINE_STRING +
+                        ProductEntry.COLUMN_PRODUCT_QUANTITY + WHITE_SPACE +
+                        productQuantity.getText().toString() + NEW_LINE_STRING +
+                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + WHITE_SPACE +
+                        productSupplierName.getText().toString() + NEW_LINE_STRING +
+                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_PHONE + WHITE_SPACE +
                         productSupplierPhone.getText().toString();
         ShareCompat.IntentBuilder.from(this).
                 setChooserTitle(titleMsg).
-                setText(msg).setType(type).
+                setText(msg).setType(INTENT_TYPE_TEXT).
                 startChooser();
     }
 
@@ -458,43 +480,43 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private void fillFieldsWithDummyValues() {
         String[] dummyValues = productUtils.getDummyStringValues();
         String text;
-        String[] result = productUtils.checkIfFieldIsNull(productName, productUtils.TEXT);
-        if (result[ProductUtils.ZERO].equals(productUtils.TRUE)) {
-            text = result[ProductUtils.TWO] + dummyValues[ProductUtils.ZERO];
+        String[] result = productUtils.checkIfFieldIsNull(productName, TEXT);
+        if (result[ZERO].equals(TRUE)) {
+            text = result[TWO] + dummyValues[ZERO];
             productName.setText(text);
         }
-        result = productUtils.checkIfFieldIsNull(productCode, productUtils.TEXT);
-        if (result[ProductUtils.ZERO].equals(productUtils.TRUE)) {
-            text = result[ProductUtils.TWO] + dummyValues[ProductUtils.ONE];
+        result = productUtils.checkIfFieldIsNull(productCode, TEXT);
+        if (result[ZERO].equals(TRUE)) {
+            text = result[TWO] + dummyValues[ONE];
             productCode.setText(text);
         }
-        result = productUtils.checkIfFieldIsNull(productCategory, productUtils.TEXT);
-        if (result[ProductUtils.ZERO].equals(productUtils.TRUE)) {
-            text = result[ProductUtils.TWO] + dummyValues[ProductUtils.TWO];
+        result = productUtils.checkIfFieldIsNull(productCategory, TEXT);
+        if (result[ZERO].equals(TRUE)) {
+            text = result[TWO] + dummyValues[TWO];
             productCategory.setText(text);
         }
-        result = productUtils.checkIfFieldIsNull(productPrice, productUtils.NUMERIC);
-        if (result[ProductUtils.ZERO].equals(productUtils.TRUE)) {
-            text = result[ProductUtils.TWO] + dummyValues[productUtils.THREE];
+        result = productUtils.checkIfFieldIsNull(productPrice, NUMERIC);
+        if (result[ZERO].equals(TRUE)) {
+            text = result[TWO] + dummyValues[THREE];
             productPrice.setText(text);
         }
-        result = productUtils.checkIfFieldIsNull(productQuantity, productUtils.NUMERIC);
-        if (result[ProductUtils.ZERO].equals(productUtils.TRUE)) {
-            text = result[ProductUtils.TWO] + dummyValues[productUtils.FOUR];
+        result = productUtils.checkIfFieldIsNull(productQuantity, NUMERIC);
+        if (result[ZERO].equals(TRUE)) {
+            text = result[TWO] + dummyValues[FOUR];
             productQuantity.setText(text);
         }
-        result = productUtils.checkIfFieldIsNull(productSupplierName, productUtils.TEXT);
-        if (result[ProductUtils.ZERO].equals(productUtils.TRUE)) {
-            text = result[ProductUtils.TWO] + dummyValues[productUtils.FIVE];
+        result = productUtils.checkIfFieldIsNull(productSupplierName, TEXT);
+        if (result[ZERO].equals(TRUE)) {
+            text = result[TWO] + dummyValues[FIVE];
             productSupplierName.setText(text);
         }
-        result = productUtils.checkIfFieldIsNull(productSupplierPhone, productUtils.PHONE);
-        if (result[ProductUtils.ZERO].equals(productUtils.TRUE)) {
-            text = result[ProductUtils.TWO] + dummyValues[productUtils.SIX];
+        result = productUtils.checkIfFieldIsNull(productSupplierPhone, PHONE);
+        if (result[ZERO].equals(TRUE)) {
+            text = result[TWO] + dummyValues[SIX];
             productSupplierPhone.setText(text);
         }
-        result = productUtils.checkIfFieldIsNull(productDescription, productUtils.LONG_TEXT);
-        text = result[ProductUtils.TWO] + dummyValues[productUtils.SEVEN];
+        result = productUtils.checkIfFieldIsNull(productDescription, LONG_TEXT);
+        text = result[TWO] + dummyValues[SEVEN];
         productDescription.setText(text);
     }
 
@@ -506,28 +528,27 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private ContentValues getEnteredData() {
         getValueOrShowErrorMsgIfNull(productName, productNameMsg,
-                productUtils.TEXT, ProductEntry.COLUMN_PRODUCT_NAME);
+                TEXT, ProductEntry.COLUMN_PRODUCT_NAME);
 
         getValueOrShowErrorMsgIfNull(productCode, productCodeMsg,
-                productUtils.TEXT, ProductEntry.COLUMN_PRODUCT_CODE);
+                TEXT, ProductEntry.COLUMN_PRODUCT_CODE);
 
         getValueOrShowErrorMsgIfNull(productCategory, productCategoryMsg,
-                productUtils.TEXT, ProductEntry.COLUMN_PRODUCT_CATEGORY);
+                TEXT, ProductEntry.COLUMN_PRODUCT_CATEGORY);
 
         getValueOrShowErrorMsgIfNull(productPrice, productPriceMsg,
-                productUtils.NUMERIC, ProductEntry.COLUMN_PRODUCT_PRICE);
+                NUMERIC, ProductEntry.COLUMN_PRODUCT_PRICE);
 
-        getValueOrShowErrorMsgIfNull(productQuantity, productQuantityMsg,
-                productUtils.NUMERIC, ProductEntry.COLUMN_PRODUCT_QUANTITY);
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
 
         getValueOrShowErrorMsgIfNull(productSupplierName, productSupplierNameMsg,
-                productUtils.TEXT, ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME);
+                TEXT, ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME);
 
         getValueOrShowErrorMsgIfNull(productSupplierPhone, productSupplierPhoneMsg,
-                productUtils.PHONE, ProductEntry.COLUMN_PRODUCT_SUPPLIER_PHONE);
+                PHONE, ProductEntry.COLUMN_PRODUCT_SUPPLIER_PHONE);
 
         getValueOrShowErrorMsgIfNull(productDescription, productDescriptionMsg,
-                productUtils.LONG_TEXT, ProductEntry.COLUMN_PRODUCT_DESCRIPTION);
+                LONG_TEXT, ProductEntry.COLUMN_PRODUCT_DESCRIPTION);
 
         byte[] blobImage; // it can be sorted as null in the database
         blobImage = ImageUtils.bitmapToBytes(bitmapImage1);
@@ -539,7 +560,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         blobImage = ImageUtils.bitmapToBytes(bitmapImage3);
         values.put(ProductEntry.COLUMN_PRODUCT_IMAGE3, blobImage);
 
-        values.put(ProductEntry.COLUMN_PRODUCT_SYNCED, 0); // as not synced after updating the item
+        values.put(ProductEntry.COLUMN_PRODUCT_SYNCED, ZERO); // as not synced after updating the item
 
         int favouredValue = getIconTagBinaryValue(favouredIcon);
         values.put(ProductEntry.COLUMN_PRODUCT_FAVORED, favouredValue);
@@ -557,41 +578,31 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String tagFavouredIcon = icon.getTag().toString();
         int binaryValue;
         if (tagOff.equals(tagFavouredIcon)) {
-            binaryValue = ProductUtils.ZERO;
+            binaryValue = ZERO;
         } else {
-            binaryValue = ProductUtils.ONE;
+            binaryValue = ONE;
         }
         return binaryValue;
     }
 
     private void setSyncedTagAndIcon(int binaryValue) {
-        if (ProductUtils.ZERO == binaryValue) {
+        if (ZERO == binaryValue) {
             syncedIcon.setTag(tagOff);
             syncedIcon.setImageResource(R.drawable.ic_cloud_off);
         } else {
             syncedIcon.setTag(tagOn);
             syncedIcon.setImageResource(R.drawable.ic_cloud_on);
-            syncedIcon.setColorFilter(getResources().getColor(R.color.icons_color));
         }
     }
 
     private void setFavouredTagAndIcon(int binaryValue) {
-        if (ProductUtils.ZERO == binaryValue) {
+        if (ZERO == binaryValue) {
             favouredIcon.setTag(tagOff);
             favouredIcon.setImageResource(R.drawable.ic_heart_off);
         } else {
             favouredIcon.setTag(tagOn);
             favouredIcon.setImageResource(R.drawable.ic_heart_on);
-            favouredIcon.setColorFilter(getResources().getColor(R.color.icons_color));
         }
-    }
-
-    @OnClick(R.id.item_favoured_icon)
-    void onClickFavouredIcon() {
-        int binaryValue = getIconTagBinaryValue(favouredIcon);
-        int newBinaryValue = (binaryValue + ProductUtils.ONE) % ProductUtils.TWO; // reminder = 0 or 1 ;
-        // Log.d(TAG , "favoured newBinaryValue: " + newBinaryValue);
-        setFavouredTagAndIcon(newBinaryValue);
     }
 
     /**
@@ -604,13 +615,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private void getValueOrShowErrorMsgIfNull(EditText editText, TextView errorLabel, String type, String columnName) {
         String errorMsg;
-        if (type.equals(productUtils.NUMERIC)) {
+        if (type.equals(NUMERIC)) {
             errorMsg = String.format(errorNumericValue, columnName);
 
-        } else if (type.equals(productUtils.PHONE)) {
-            errorMsg = String.format(errorSuppPhone, productUtils.TEN, phoneMaxLength);
+        } else if (type.equals(PHONE)) {
+            errorMsg = String.format(errorSuppPhone, TEN, phoneMaxLength);
 
-        } else if (type.equals(productUtils.LONG_TEXT)) {
+        } else if (type.equals(LONG_TEXT)) {
             errorMsg = errorDescription;
 
         } else {
@@ -618,8 +629,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         String[] result = productUtils.checkIfFieldIsNull(editText, type);
-        if (result[ProductUtils.ZERO].equals(productUtils.FALSE)) {
-            values.put(columnName, result[ProductUtils.ONE]);
+        if (result[ZERO].equals(FALSE)) {
+            values.put(columnName, result[ONE]);
             errorLabel.setVisibility(View.GONE);
         } else {
             errorLabel.setVisibility(View.VISIBLE);
@@ -627,36 +638,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-    @OnClick(R.id.image1)
-    void onClickImage1() {
-        intentToPickImageFromGallery(ProductUtils.ONE);
-    }
-
-    @OnClick(R.id.image2)
-    void onClickImage2() {
-        intentToPickImageFromGallery(ProductUtils.TWO);
-    }
-
-    @OnClick(R.id.image3)
-    void onClickImage3() {
-        intentToPickImageFromGallery(productUtils.THREE);
-    }
-
     /**
      * intent to get image from the gallery for the @param clickedImage
      */
     private void intentToPickImageFromGallery(int clickedImage) {
         Intent pickImageFromGallery = new Intent(Intent.ACTION_PICK); //  , Uri.parse("images/*")
-        pickImageFromGallery.setType(productUtils.INTENT_TYPE_IMAGE);
+        pickImageFromGallery.setType(INTENT_TYPE_IMAGE);
         startActivityForResult(pickImageFromGallery, clickedImage);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // I used the requested code as an assigned value to each image previously as Image1 = 1 etc
-        if (requestCode == ProductUtils.ONE ||
-                requestCode == ProductUtils.TWO ||
-                requestCode == productUtils.THREE) {
+        if (requestCode == ONE ||
+                requestCode == TWO ||
+                requestCode == THREE) {
 
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
@@ -676,15 +672,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private void setClickedImageView(int clickedImage, Bitmap imageBitmap) {
         ImageView imageView;
         switch (clickedImage) {
-            case 2:
+            case TWO:
                 imageView = productImage2;
                 bitmapImage2 = imageBitmap;
                 break;
-            case 3:
+            case THREE:
                 imageView = productImage3;
                 bitmapImage3 = imageBitmap;
                 break;
-            case 1:
+            case ONE:
             default:
                 imageView = productImage1;
                 bitmapImage1 = imageBitmap;
@@ -731,7 +727,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private void showImagesIfNotNull(Cursor updatingRow) {
         byte[] imageBytes = getBlobFromCursor(updatingRow, ProductEntry.COLUMN_PRODUCT_IMAGE1);
-        int imageResourceId = R.drawable.click_to_add_image;
+        int imageResourceId = R.drawable.ic_click_to_add_image;
         if (imageBytes != null) {
             bitmapImage1 = ImageUtils.byteArrayToBitmap(imageBytes);
             productImage1.setImageBitmap(bitmapImage1);
@@ -760,6 +756,44 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
+    @OnClick(R.id.item_favoured_icon)
+    void onClickFavouredIcon() {
+        int binaryValue = getIconTagBinaryValue(favouredIcon);
+        int newBinaryValue = (binaryValue + ONE) % TWO; // reminder = 0 or 1 ;
+        setFavouredTagAndIcon(newBinaryValue);
+    }
+
+    @OnClick(R.id.image1)
+    void onClickImage1() {
+        intentToPickImageFromGallery(ONE);
+    }
+
+    @OnClick(R.id.image2)
+    void onClickImage2() {
+        intentToPickImageFromGallery(TWO);
+    }
+
+    @OnClick(R.id.image3)
+    void onClickImage3() {
+        intentToPickImageFromGallery(THREE);
+    }
+
+    @OnClick(R.id.quantity_down_icon)
+    void onClickArrowDownIcon() {
+        productQuantity.setText(String.valueOf(productUtils.refuseNegativeNumbers(--quantity)));
+    }
+
+    @OnClick(R.id.quantity_up_icon)
+    void onClickArrowUpIcon() {
+        productQuantity.setText(String.valueOf(++quantity));
+    }
+
+    @OnClick(R.id.phone_icon)
+    void onClickPhoneIcon() {
+        String uri = INTENT_TYPE_TEL + productSupplierPhone.getText().toString().trim();
+        startActivity(new Intent(Intent.ACTION_DIAL).setData(Uri.parse(uri)));
+    }
+
     /**
      * loader used here to display details of wanted product by id
      * or to update data or to insert data in background thread
@@ -768,31 +802,31 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        int done = productUtils.INVALID;
+        int done = INVALID;
         // if (mode.equals(detailsProduct)) {
         // moved this lines to the end of this method to be a general case loaded for any case
         // because if choose "return null" it force the loader to repeat loading twice
         // which not needed here , all needed to load only once for each case
         // return new ProductCursorLoader( // display current id only this,ProductEntry.CONTENT_URI,
-        //  null, ProductEntry._ID + productUtils.SIGN_ID, new String[]{String.valueOf(updatingId)}, null);
+        //  null, ProductEntry._ID + SIGN_ID, new String[]{String.valueOf(updatingId)}, null);
         // end of this comment  } else
         if (mode.equals(updateProduct)) { // mode = update product
             done = productDbQuery.update(getEnteredData(),
-                    ProductEntry._ID + productUtils.SIGN_ID, updatingId);
+                    ProductEntry._ID + SIGN_ID, updatingId);
 
         } else if (mode.equals(addProduct)) { // mode = add product
-            if (productDbQuery.insertData(getEnteredData())) done = productUtils.VALID;
+            if (productDbQuery.insertData(getEnteredData())) done = VALID;
         } else if (mode.equals(deleteProduct)) { // case delete
             done = productDbQuery.deleteById(updatingId);
         }
-        if (done != productUtils.INVALID) {
+        if (done != INVALID) {
             finish();
         }
         return new CursorLoader( // display current id only
                 this,
                 ProductEntry.CONTENT_URI,
                 null,
-                ProductEntry._ID + productUtils.SIGN_ID,
+                ProductEntry._ID + SIGN_ID,
                 new String[]{String.valueOf(updatingId)},
                 null);
     }
@@ -813,8 +847,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         updatingRow, ProductEntry.COLUMN_PRODUCT_CATEGORY));
                 productPrice.setText(getStringFromCursor(
                         updatingRow, ProductEntry.COLUMN_PRODUCT_PRICE));
-                productQuantity.setText(getStringFromCursor(
-                        updatingRow, ProductEntry.COLUMN_PRODUCT_QUANTITY));
+                String quantity = getStringFromCursor(
+                        updatingRow, ProductEntry.COLUMN_PRODUCT_QUANTITY);
+                productQuantity.setText(quantity);
+                setQuantity(Integer.parseInt(quantity));
                 productSupplierName.setText(getStringFromCursor(
                         updatingRow, ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME));
                 productDescription.setText(getStringFromCursor(
@@ -841,7 +877,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      * but here not needed so it always = null
      */
     private void restartLoaderOnQueryBundleChange() {
-        getLoaderManager().restartLoader(ProductUtils.ZERO, null, this);
+        getLoaderManager().restartLoader(ZERO, null, this);
     }
 }
 

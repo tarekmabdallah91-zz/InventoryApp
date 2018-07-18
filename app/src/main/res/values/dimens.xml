@@ -19,6 +19,7 @@ limitations under the License.
 
     <dimen name="padding_margin_value_4spaces">4dp</dimen>
     <dimen name="padding_margin_value_8spaces">8dp</dimen>
+    <dimen name="padding_margin_value_24spaces">24dp</dimen>
 
     <dimen name="name_text_size">20sp</dimen>
     <dimen name="code_text_size">18sp</dimen>
@@ -35,6 +36,8 @@ limitations under the License.
     <dimen name="description_edit_text_height">120dp</dimen>
 
     <dimen name="items_icons_size">24dp</dimen>
+
+    <!-- as the quantity text size -->
 
     <!-- 120 = 16 margin_bottom fab + 48 height fab + 16 margin_top fab + 40 for piece of last item on recycler view -->
     <dimen name="padding_bottom_recycler_view">120dp</dimen>
