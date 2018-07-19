@@ -40,7 +40,7 @@ public class ProductPreferences extends PreferenceFragmentCompat
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preference_settings_layout);
-
+        // TODO : to solve it to change summary as expected !
         // to change summary of all preferences
         SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
         PreferenceScreen preferenceScreen = getPreferenceScreen();

@@ -25,6 +25,7 @@ public interface ConstantsUtils {
     String EQUAL = "=";
     String EMPTY_STRING = "";
     String WHITE_SPACE = " ";
+    String COMMA = ", ";
     String NEW_LINE_STRING = "\n";
     String TEXT_REGEX = "^[A-Za-z0-9][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$";
     String SPLITTER_REGEX_COLUMN_NAME = "(for )";
@@ -32,8 +33,6 @@ public interface ConstantsUtils {
 
     String MORE_THAN = "more than";
     String LESS_THAN = "less than";
-    String DESC = " DESC";
-    String ASC = " ASC";
     String TEXT = "TEXT";
     String NUMERIC = "NUMERIC";
     String LONG_TEXT = "LONG_TEXT";
@@ -54,6 +53,7 @@ public interface ConstantsUtils {
     String FRAGMENT_ITEM_POSITION = "fragmentItemPosition";
     String SORT_OR_SEARCH_PREFERENCE_KEY = "sortOrSearchValue";
     String ORDER_BY_PREFERENCE_KEY = "orderByValue";
+    String ORDER_BY = "order by";
     String SEARCHED_INPUT_TEXT_PREFERENCE_KEY = "searchedInputText";
     String SIGN_ID = " =?";
     String DOLLAR_SIGN = " $";

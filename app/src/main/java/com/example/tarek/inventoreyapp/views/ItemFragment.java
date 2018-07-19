@@ -78,7 +78,7 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
     @BindString(R.string.order_key)
     String ORDER_KEY;
     @BindString(R.string.key_order_by)
-    String ORDER_BY;
+    String ORDER_BY_LABEL;
     @BindString(R.string.value_order_by_id)
     String ORDER_DEFAULT_VALUE;
     @BindString(R.string.search_key)
@@ -167,10 +167,10 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         sortOrSearchValue = sharedPreferences.getString(SORT_OR_SEARCH_KEY, SORT_OR_SEARCH_DEFAULT_VALUE);
         bundle.putString(SORT_OR_SEARCH_PREFERENCE_KEY, sortOrSearchValue);
-        // get the selected  ORDER_BY value to complete the query correctly
+        // get the selected  ORDER_BY_LABEL value to complete the query correctly
         orderByValue = sharedPreferences.getString(ORDER_KEY, ORDER_DEFAULT_VALUE);
         bundle.putString(ORDER_BY_PREFERENCE_KEY, orderByValue);
-        // get the selected  ORDER_BY value to complete the query correctly
+        // get the selected  ORDER_BY_LABEL value to complete the query correctly
         inputText = sharedPreferences.getString(SEARCH_KEY, EMPTY_STRING);
         bundle.putString(SEARCHED_INPUT_TEXT_PREFERENCE_KEY, inputText);
     }
@@ -184,7 +184,6 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
             frg_tv_count_msg.setVisibility(View.GONE);
         } else if (cursor.getCount() <= ZERO) {
             showData(BOOLEAN_FALSE, noDataForInputValue);
-            frg_tv_count_msg.setVisibility(View.GONE);
         } else {
             productRecyclerAdapter.swapCursor(cursor);
             String msg = String.format(countMsg, cursor.getCount());
@@ -228,8 +227,10 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
 
     private void showData(boolean value, String text) {
         // showed text in count text view
-        String msg = sortOrSearchValue + WHITE_SPACE;
-        msg += EQUAL + WHITE_SPACE + inputText + WHITE_SPACE + ORDER_BY + WHITE_SPACE + orderByValue;
+        String msg;
+        if (ORDER_BY.equals(sortOrSearchValue)) msg = EMPTY_STRING;
+        else msg = sortOrSearchValue + WHITE_SPACE + EQUAL + WHITE_SPACE + inputText + COMMA;
+        msg += ORDER_BY + WHITE_SPACE + orderByValue;
 
         if (value) {
             msg = text + WHITE_SPACE + msg;
@@ -323,11 +324,11 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
             sortOrSearchValue = sharedPreferences.getString(SORT_OR_SEARCH_KEY, SORT_OR_SEARCH_DEFAULT_VALUE);
             bundle.putString(SORT_OR_SEARCH_PREFERENCE_KEY, sortOrSearchValue);
         } else if (ORDER_KEY.equals(key)) {
-            // get the selected  ORDER_BY value to complete the query correctly
+            // get the selected  ORDER_BY_LABEL value to complete the query correctly
             orderByValue = sharedPreferences.getString(ORDER_KEY, ORDER_DEFAULT_VALUE);
             bundle.putString(ORDER_BY_PREFERENCE_KEY, orderByValue);
         } else if (SEARCH_KEY.equals(key)) {
-            // get the selected  ORDER_BY value to complete the query correctly
+            // get the selected  ORDER_BY_LABEL value to complete the query correctly
             inputText = sharedPreferences.getString(SEARCH_KEY, ProductUtils.EMPTY_STRING);
             bundle.putString(SEARCHED_INPUT_TEXT_PREFERENCE_KEY, inputText);
         }
