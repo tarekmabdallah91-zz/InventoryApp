@@ -220,12 +220,18 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
         }
 
         private void setCounterSale(String sign) {
-            quantity = Integer.parseInt(productQuantity.getText().toString());
+            try { // in case it was out of stoke means 0
+                quantity = Integer.parseInt(productQuantity.getText().toString());
+            } catch (Exception e) {
+                quantity = ZERO;
+            }
             if (PLUS.equals(sign)) {
-                productQuantity.setText(String.valueOf(productUtils.refuseNegativeNumbers(--quantity)));
-                if (ZERO != quantity) counterSale.setText(String.valueOf(++saleItems));
+                if (ZERO < quantity) {
+                    productQuantity.setText(String.valueOf(productUtils.refuseNegativeNumbers(--quantity)));
+                    counterSale.setText(String.valueOf(++saleItems));
+                }
             } else {
-                if (ZERO != saleItems) {
+                if (ZERO < saleItems) {
                     productQuantity.setText(String.valueOf(++quantity));
                     counterSale.setText(String.valueOf(productUtils.refuseNegativeNumbers(--saleItems)));
                 }

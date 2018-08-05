@@ -54,6 +54,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.app.SearchManager.QUERY;
+
 public class ItemFragment extends Fragment implements ConstantsUtils,
         SharedPreferences.OnSharedPreferenceChangeListener, ProductRecyclerAdapter.ProductItemOnClickListener {
 
@@ -383,3 +385,4 @@ public class ItemFragment extends Fragment implements ConstantsUtils,
     }
 
 }
+

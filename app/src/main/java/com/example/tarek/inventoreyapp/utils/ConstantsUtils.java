@@ -46,7 +46,6 @@ public interface ConstantsUtils {
     String SEARCH_TEXT_2ND_SINGLE_QUOTE = "%'";
 
     String MODE = "mode";
-    String QUERY = "query";
     String DELETE_ITEM = " delete item";
     String DELETE_ALL_DATA = "delete all data";
     String INSERT_DUMMY_ITEM = "insert dummy item";
@@ -73,6 +72,7 @@ public interface ConstantsUtils {
     float DUMMY_PRODUCT_PRICE = 0.99f;
     int LIMIT_DESCRIPTION_LENGTH = 1000;
     int LIMIT_RANDOM_VALUE = 100;
+    int LOADER_ID = 11;
 
     int INVALID = -1;
     int ZERO = 0;

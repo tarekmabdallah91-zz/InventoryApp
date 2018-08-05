@@ -51,8 +51,8 @@ public class ProductCursorLoader extends AsyncTaskLoader<Cursor> implements Cons
         String inputText = bundle.getString(SEARCHED_INPUT_TEXT_PREFERENCE_KEY); // if he want to search for text or numbers
         String mode = bundle.getString(MODE); // keyword to differ between the db operations CURD
         String[] projection = productDbQuery.projection(); // column names , if we want all columns it can be null instead of typing all columns names
-        String selection = null; // WHERE selection
-        String[] selectionArgs = null; // WHERE selection =? / <=? / >=? selectionArgs
+        String selection; // WHERE selection
+        String[] selectionArgs; // WHERE selection =? / <=? / >=? selectionArgs
 
         final int ZERO = 0;
         final int ONE = 1;
@@ -63,69 +63,68 @@ public class ProductCursorLoader extends AsyncTaskLoader<Cursor> implements Cons
             String args2ndElement = null;
             String[] parts;
             String selection2;
-            if (null != sortOrSearchValue) {
-                switch (fragmentItemPosition) {
-                    case ZERO:
-                        selection = null; // must be empty
-                        args1stElement = null;
-                        break;
-                    case ONE:
-                        selection = ProductEntry.COLUMN_PRODUCT_SYNCED + SIGN_ID;
-                        args1stElement = String.valueOf(ONE);
-                        break;
-                    case TWO:
-                        selection = ProductEntry.COLUMN_PRODUCT_SYNCED + SIGN_ID;
-                        args1stElement = String.valueOf(ZERO);
-                        break;
-                    case THREE:
-                    default:
-                        selection = ProductEntry.COLUMN_PRODUCT_FAVORED + SIGN_ID;
-                        args1stElement = String.valueOf(ONE);
-                }
-                if (!ORDER_BY.equals(sortOrSearchValue)) {
-                    if (sortOrSearchValue.contains(MINUS)) { //user search for numbers  price/quantity - more/less than
-                        parts = sortOrSearchValue.split(SPLITTER_REGEX_MINUS); // column name - more/less than
-                        selection2 = parts[ZERO]; // column name
-                        if (parts[ONE].contains(MORE_THAN)) {
-                            selection2 += MORE_THAN_SIGN; // column name >=?
-                        } else if (parts[ONE].contains(LESS_THAN)) {
-                            selection2 += LESS_THAN_SIGN; // column name <=?
-                        }
-                        if (null == selection && null != selection2) selection = selection2;
-                        else if (null != selection)
-                            selection = selection + selection2; //&& null != selection2
-                        //an other case will be by default as: else if (null != selection && null == selection2) selection = selection;
-                        args2ndElement = String.valueOf(Integer.parseInt(inputText)); // input is integer not string
-                    } else { // user search for texts
-                        String columnName = sortOrSearchValue.split(SPLITTER_REGEX_COLUMN_NAME, TEN)[ONE];
-                        selection2 = columnName + LIKE + SEARCH_TEXT_1ST_SINGLE_QUOTE + inputText + SEARCH_TEXT_2ND_SINGLE_QUOTE;
-                        args2ndElement = null;
-                        if (null == selection) selection = selection2;
-                        else selection = selection + AND /*" AND*/ + selection2;
-                    }
-                }
 
-                if (null == args1stElement && null != args2ndElement) {
-                    selectionArgs = new String[]{args2ndElement};
-                } else if (null != args1stElement && null == args2ndElement) {
-                    selectionArgs = new String[]{args1stElement};
-                } else if (null != args1stElement) { //&& null != args2ndElement) {
-                    selectionArgs = new String[]{args1stElement, args2ndElement};
-                } else { // each of them is null
-                    selectionArgs = null;
+            switch (fragmentItemPosition) {
+                case ZERO:
+                    selection = null; // must be empty
+                    args1stElement = null;
+                    break;
+                case ONE:
+                    selection = ProductEntry.COLUMN_PRODUCT_SYNCED + SIGN_ID;
+                    args1stElement = String.valueOf(ONE);
+                    break;
+                case TWO:
+                    selection = ProductEntry.COLUMN_PRODUCT_SYNCED + SIGN_ID;
+                    args1stElement = String.valueOf(ZERO);
+                    break;
+                case THREE:
+                default:
+                    selection = ProductEntry.COLUMN_PRODUCT_FAVORED + SIGN_ID;
+                    args1stElement = String.valueOf(ONE);
+            }
+            if (null != sortOrSearchValue && !ORDER_BY.equals(sortOrSearchValue)) {
+                if (sortOrSearchValue.contains(MINUS)) { //user search for numbers  price/quantity - more/less than
+                    parts = sortOrSearchValue.split(SPLITTER_REGEX_MINUS); // column name - more/less than
+                    selection2 = parts[ZERO]; // column name
+                    if (parts[ONE].contains(MORE_THAN)) {
+                        selection2 += MORE_THAN_SIGN; // column name >=?
+                    } else if (parts[ONE].contains(LESS_THAN)) {
+                        selection2 += LESS_THAN_SIGN; // column name <=?
+                    }
+                    if (null == selection && null != selection2) selection = selection2;
+                    else if (null != selection)
+                        selection = selection + selection2; //&& null != selection2
+                    //an other case will be by default as: else if (null != selection && null == selection2) selection = selection;
+                    args2ndElement = String.valueOf(Integer.parseInt(inputText)); // input is integer not string
+                } else { // user search for texts
+                    String columnName = sortOrSearchValue.split(SPLITTER_REGEX_COLUMN_NAME, TEN)[ONE];
+                    selection2 = columnName + LIKE + SEARCH_TEXT_1ST_SINGLE_QUOTE + inputText + SEARCH_TEXT_2ND_SINGLE_QUOTE;
+                    args2ndElement = null;
+                    if (null == selection) selection = selection2;
+                    else selection = selection + AND /*" AND*/ + selection2;
                 }
             }
-            //if (QUERY.equals(mode)) is the default case as the cursor is reloading whatever any value of the mode
-            if (INSERT_DUMMY_ITEM.equals(mode)) {
-                productDbQuery.insertData(null);
-            } else if (DELETE_ALL_DATA.equals(mode)) {
-                // TODO - It should delete only the items in the current fragment but it delete all items from db
-                // although the selection and selectionArgs is the same as the shown data !!
-                contentResolver.delete(ProductEntry.CONTENT_URI, selection, selectionArgs);
-            } else if (null != mode && mode.contains(DELETE_ITEM)) {
-                int id = Integer.parseInt(mode.replaceAll(
-                        REGEX_TO_GET_INTEGER_ONLY_FROM_STRING, EMPTY_STRING));
-                productDbQuery.deleteById(id);
+
+            if (null == args1stElement && null != args2ndElement) {
+                selectionArgs = new String[]{args2ndElement};
+            } else if (null != args1stElement && null == args2ndElement) {
+                selectionArgs = new String[]{args1stElement};
+            } else if (null != args1stElement) { //&& null != args2ndElement) {
+                selectionArgs = new String[]{args1stElement, args2ndElement};
+            } else { // each of them is null
+                selectionArgs = null;
+            }
+
+            if (null != mode) { //if (mode == null) is the default case as the cursor will query the data with selection and args
+                if (INSERT_DUMMY_ITEM.equals(mode)) {
+                    productDbQuery.insertData(null);
+                } else if (DELETE_ALL_DATA.equals(mode)) {
+                    contentResolver.delete(ProductEntry.CONTENT_URI, selection, selectionArgs);
+                } else if (mode.contains(DELETE_ITEM)) {
+                    int id = Integer.parseInt(mode.replaceAll(
+                            REGEX_TO_GET_INTEGER_ONLY_FROM_STRING, EMPTY_STRING));
+                    productDbQuery.deleteById(id);
+                }
             }
         } catch (Exception e) {
             Log.d(TAG, e.toString() + e.getMessage() + e.getCause() + e.getLocalizedMessage());

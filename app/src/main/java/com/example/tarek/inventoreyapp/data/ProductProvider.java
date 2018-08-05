@@ -137,7 +137,7 @@ public class ProductProvider extends ContentProvider {
         int deletedRows;
         switch (match) {
             case PRODUCT:
-                deletedRows = db.delete(ProductEntry.TABLE_NAME, null, null); // to delete all rows but still increment according to last id
+                deletedRows = db.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case PRODUCT_ID:
                 deletedRows = db.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
